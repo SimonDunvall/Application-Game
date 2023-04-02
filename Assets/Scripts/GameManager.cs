@@ -2,31 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
     private Building buildingToPlace;
-
-    public CustomCursor customCursor;
-
+    private CustomCursor customCursor;
     public Tile[] tiles;
+
+    private void Start()
+    {
+        buildingToPlace = StaticClass.BoughtBuilding;
+        customCursor = StaticClass.CustomCursor;
+    }
 
     private void Update()
     {
         PlaceBuilding();
-    }
-
-    public void BuyBuilding(Building building)
-    {
-        SceneManager.LoadScene(0);
-
-        customCursor.gameObject.SetActive(true);
-        customCursor.GetComponent<SpriteRenderer>().sprite = building.GetComponent<SpriteRenderer>().sprite;
-        Cursor.visible = false;
-
-        buildingToPlace = building;
     }
 
     public void PlaceBuilding()
@@ -63,16 +55,17 @@ public class GameManager : MonoBehaviour
     }
 
     private readonly Vector2[] neighbourPositions =
-{
-    Vector2.up,
-    Vector2.right,
-    Vector2.down,
-    Vector2.left,
-    Vector2.up + Vector2.right,
-    Vector2.up + Vector2.left,
-    Vector2.down + Vector2.right,
-    Vector2.down + Vector2.left
-};
+    {
+        Vector2.up,
+        Vector2.right,
+        Vector2.down,
+        Vector2.left,
+        Vector2.up + Vector2.right,
+        Vector2.up + Vector2.left,
+        Vector2.down + Vector2.right,
+        Vector2.down + Vector2.left
+    };
+
 
     public List<Tile> FindAllTileNeighbors(Vector2 tilePosition)
     {
