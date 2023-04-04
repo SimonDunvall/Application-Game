@@ -9,11 +9,9 @@ public class ShopManager : MonoBehaviour
 
     public void BuyBuilding(Building building)
     {
-        SceneManager.LoadScene(0);
+        FindObjectOfType<Scenes>().LoadMap();
 
-        customCursor.gameObject.SetActive(true);
-        customCursor.GetComponent<SpriteRenderer>().sprite = building.GetComponent<SpriteRenderer>().sprite;
-        Cursor.visible = false;
+        customCursor.UseCursor(building);
 
         StaticClass.BoughtBuilding = building;
         StaticClass.CustomCursor = customCursor;

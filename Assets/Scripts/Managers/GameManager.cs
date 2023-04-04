@@ -37,50 +37,21 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            List<Tile> allNeighbouringTiles = FindAllTileNeighbors(nearestTile.transform.position);
+            List<Tile> allNeighbouringTiles = Tile.FindAllTileNeighbors(nearestTile.transform.position, tiles);
             if (nearestTile.isOccupied == false && allNeighbouringTiles.Count == 8 && allNeighbouringTiles.All(tile => tile.isOccupied == false))
             {
                 Instantiate(buildingToPlace, nearestTile.transform.position, Quaternion.identity);
                 buildingToPlace = null;
 
-                foreach (Tile tile in allNeighbouringTiles)
+                foreach (var tile in allNeighbouringTiles)
                 {
                     tile.isOccupied = true;
                 }
                 nearestTile.isOccupied = true;
-                customCursor.gameObject.SetActive(false);
-                Cursor.visible = true;
+                StaticClass.BoughtBuilding = null;
+                StaticClass.CustomCursor = null;
+                customCursor.DisableCursor();
             }
         }
-    }
-
-    private readonly Vector2[] neighbourPositions =
-    {
-        Vector2.up,
-        Vector2.right,
-        Vector2.down,
-        Vector2.left,
-        Vector2.up + Vector2.right,
-        Vector2.up + Vector2.left,
-        Vector2.down + Vector2.right,
-        Vector2.down + Vector2.left
-    };
-
-
-    public List<Tile> FindAllTileNeighbors(Vector2 tilePosition)
-    {
-        List<Tile> allNeighbouringTiles = new List<Tile>();
-        foreach (Vector2 neighbourPosition in neighbourPositions)
-        {
-            Vector3 position = tilePosition + neighbourPosition;
-            foreach (Tile tile in tiles)
-            {
-                if (tile.transform.position == position)
-                {
-                    allNeighbouringTiles.Add(tile);
-                }
-            }
-        }
-        return allNeighbouringTiles;
     }
 }
