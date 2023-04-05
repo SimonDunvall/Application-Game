@@ -2,75 +2,79 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Assets.Scripts.DataPersistence.Data;
 
-public class DataPersistenceManager : MonoBehaviour
+namespace Assets.Scripts.DataPersistence
 {
-    [Header("File Storage Config")]
-    [SerializeField] private string fileName;
-    [SerializeField] private bool useEncryption;
-
-    private GameData gameData;
-    private List<IDataPersistence> dataPersistenceObjects;
-    private FileDataHandler dataHandler;
-
-    public static DataPersistenceManager instance { get; private set; }
-
-    private void Awake()
+    public class DataPersistenceManager : MonoBehaviour
     {
-        if (instance != null)
-            Debug.LogError("Found more than one Data Persistence Manager in the scene");
+        [Header("File Storage Config")]
+        [SerializeField] private string fileName;
+        [SerializeField] private bool useEncryption;
 
-        instance = this;
-    }
+        private GameData gameData;
+        private List<IDataPersistence> dataPersistenceObjects;
+        private FileDataHandler dataHandler;
 
-    private void Start()
-    {
-        this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName, useEncryption);
-        this.dataPersistenceObjects = FindAllDataPersistneceObjects();
-        LoadGame();
-    }
+        public static DataPersistenceManager instance { get; private set; }
 
-    private void NewGame()
-    {
-        this.gameData = new GameData();
-    }
-
-    private void LoadGame()
-    {
-        this.gameData = dataHandler.Load();
-
-        if (this.gameData == null)
+        private void Awake()
         {
-            Debug.Log("No save was found. Initializing data to defaults");
-            NewGame();
+            if (instance != null)
+                Debug.LogError("Found more than one Data Persistence Manager in the scene");
+
+            instance = this;
         }
 
-        foreach (var dataPersistenceObj in dataPersistenceObjects)
+        private void Start()
         {
-            dataPersistenceObj.LoadData(gameData);
-        }
-    }
-
-    private void SaveGame()
-    {
-        foreach (var dataPersistenceObj in dataPersistenceObjects)
-        {
-            dataPersistenceObj.SaveData(ref gameData);
+            dataHandler = new FileDataHandler(Application.persistentDataPath, fileName, useEncryption);
+            dataPersistenceObjects = FindAllDataPersistneceObjects();
+            LoadGame();
         }
 
-        dataHandler.Save(gameData);
-    }
+        private void NewGame()
+        {
+            gameData = new GameData();
+        }
 
-    private void OnApplicationQuit()
-    {
-        SaveGame();
-    }
+        private void LoadGame()
+        {
+            gameData = dataHandler.Load();
 
-    private List<IDataPersistence> FindAllDataPersistneceObjects()
-    {
-        IEnumerable<IDataPersistence> dataPersistenceObjects = FindObjectsOfType<MonoBehaviour>()
-            .OfType<IDataPersistence>();
+            if (gameData == null)
+            {
+                Debug.Log("No save was found. Initializing data to defaults");
+                NewGame();
+            }
 
-        return new List<IDataPersistence>(dataPersistenceObjects);
+            foreach (var dataPersistenceObj in dataPersistenceObjects)
+            {
+                dataPersistenceObj.LoadData(gameData);
+            }
+        }
+
+        private void SaveGame()
+        {
+            foreach (var dataPersistenceObj in dataPersistenceObjects)
+            {
+                dataPersistenceObj.SaveData(ref gameData);
+            }
+
+            dataHandler.Save(gameData);
+        }
+
+        private void OnApplicationQuit()
+        {
+            SaveGame();
+        }
+
+        private List<IDataPersistence> FindAllDataPersistneceObjects()
+        {
+            IEnumerable<IDataPersistence> dataPersistenceObjects = FindObjectsOfType<MonoBehaviour>()
+                .OfType<IDataPersistence>();
+
+            return new List<IDataPersistence>(dataPersistenceObjects);
+        }
     }
 }

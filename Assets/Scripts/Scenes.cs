@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Scenes : MonoBehaviour
+namespace Assets.Scripts
 {
-    public void LoadMap()
+    public class Scenes : MonoBehaviour
     {
-        SceneManager.LoadScene(0);
-    }
+        public void LoadMap()
+        {
+            SceneManager.LoadScene(0);
+        }
 
-    public void LoadShop()
-    {
-        SceneManager.LoadScene(1);
+        public void LoadShop()
+        {
+            SceneManager.LoadScene(1);
+        }
     }
 }

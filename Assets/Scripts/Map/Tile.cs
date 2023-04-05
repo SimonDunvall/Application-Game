@@ -4,23 +4,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class Tile : MonoBehaviour
+namespace Assets.Scripts.Map
 {
-    public bool isOccupied;
-
-    internal static List<Tile> FindAllTileNeighbors(Vector2 tilePosition, Tile[] tiles)
+    public class Tile : MonoBehaviour
     {
-        List<Tile> allNeighbouringTiles = new List<Tile>();
-        foreach (Vector2 neighbourPosition in neighbourPositions)
+        public bool isOccupied;
+
+        internal static List<Tile> FindAllTileNeighbors(Vector2 tilePosition, Tile[] tiles)
         {
-            Vector3 position = tilePosition + neighbourPosition;
-            allNeighbouringTiles.AddRange(tiles.Where(tile => tile.transform.position == position));
+            List<Tile> allNeighbouringTiles = new List<Tile>();
+            foreach (Vector2 neighbourPosition in neighbourPositions)
+            {
+                Vector3 position = tilePosition + neighbourPosition;
+                allNeighbouringTiles.AddRange(tiles.Where(tile => tile.transform.position == position));
+            }
+            return allNeighbouringTiles;
         }
-        return allNeighbouringTiles;
-    }
 
-    private static readonly Vector2[] neighbourPositions =
-    {
+        private static readonly Vector2[] neighbourPositions =
+        {
         Vector2.up,
         Vector2.right,
         Vector2.down,
@@ -30,4 +32,5 @@ public class Tile : MonoBehaviour
         Vector2.down + Vector2.right,
         Vector2.down + Vector2.left
     };
+    }
 }

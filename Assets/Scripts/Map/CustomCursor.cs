@@ -1,31 +1,35 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Buildings;
 using UnityEngine;
 
-public class CustomCursor : MonoBehaviour
+namespace Assets.Scripts.Map
 {
-    internal void DisableCursor()
+    public class CustomCursor : MonoBehaviour
     {
-        this.gameObject.SetActive(false);
-        Cursor.visible = true;
-    }
+        internal void DisableCursor()
+        {
+            gameObject.SetActive(false);
+            Cursor.visible = true;
+        }
 
-    internal void UseCursor(Building building)
-    {
-        this.gameObject.SetActive(true);
-        this.GetComponent<SpriteRenderer>().sprite = building.GetComponent<SpriteRenderer>().sprite;
-        Cursor.visible = false;
-    }
+        internal void UseCursor(Building building)
+        {
+            gameObject.SetActive(true);
+            GetComponent<SpriteRenderer>().sprite = building.GetComponent<SpriteRenderer>().sprite;
+            Cursor.visible = false;
+        }
 
-    void Start()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
+        void Start()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
 
-    void Update()
-    {
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        transform.position = mousePosition;
+        void Update()
+        {
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            transform.position = mousePosition;
+        }
     }
 }

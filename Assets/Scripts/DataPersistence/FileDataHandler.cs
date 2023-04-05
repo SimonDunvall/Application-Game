@@ -4,84 +4,88 @@ using UnityEngine;
 using System;
 using System.IO;
 using System.Linq;
+using Assets.Scripts.DataPersistence.Data;
 
-public class FileDataHandler
+namespace Assets.Scripts.DataPersistence
 {
-    private string dataDirPath = "";
-    private string dataFileName = "";
-    private bool useEncryption = false;
-    private readonly string encyptionCodeWord = "Ebba<3";
-
-    public FileDataHandler(string dataDirPath, string dataFileName, bool useEncryption)
+    public class FileDataHandler
     {
-        this.dataDirPath = dataDirPath;
-        this.dataFileName = dataFileName;
-        this.useEncryption = useEncryption;
-    }
+        private string dataDirPath = "";
+        private string dataFileName = "";
+        private bool useEncryption = false;
+        private readonly string encyptionCodeWord = "Ebba<3";
 
-    public GameData Load()
-    {
-        string fullPath = Path.Combine(dataDirPath, dataFileName);
-        GameData loadedData = null;
-        if (File.Exists(fullPath))
+        public FileDataHandler(string dataDirPath, string dataFileName, bool useEncryption)
         {
+            this.dataDirPath = dataDirPath;
+            this.dataFileName = dataFileName;
+            this.useEncryption = useEncryption;
+        }
+
+        public GameData Load()
+        {
+            string fullPath = Path.Combine(dataDirPath, dataFileName);
+            GameData loadedData = null;
+            if (File.Exists(fullPath))
+            {
+                try
+                {
+                    string dataToLoad = "";
+                    using (FileStream stream = new FileStream(fullPath, FileMode.Open))
+                    {
+                        using (StreamReader reader = new StreamReader(stream))
+                        {
+                            dataToLoad = reader.ReadToEnd();
+                        }
+                    }
+
+                    if (useEncryption)
+                        dataToLoad = EncryptDecrypt(dataToLoad);
+
+                    loadedData = JsonUtility.FromJson<GameData>(dataToLoad);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"Error occured when trying tto save data to file: {fullPath} \n {ex}");
+                }
+            }
+            return loadedData;
+        }
+
+        public void Save(GameData data)
+        {
+            string fullPath = Path.Combine(dataDirPath, dataFileName);
             try
             {
-                string dataToLoad = "";
-                using (FileStream stream = new FileStream(fullPath, FileMode.Open))
-                {
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        dataToLoad = reader.ReadToEnd();
-                    }
-                }
+                Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+                string dataToStore = JsonUtility.ToJson(data, true);
 
                 if (useEncryption)
-                    dataToLoad = EncryptDecrypt(dataToLoad);
+                    dataToStore = EncryptDecrypt(dataToStore);
 
-                loadedData = JsonUtility.FromJson<GameData>(dataToLoad);
+                using (FileStream stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    using (StreamWriter writer = new StreamWriter(stream))
+                    {
+                        writer.Write(dataToStore);
+                    }
+                }
             }
             catch (Exception ex)
             {
+
                 Debug.LogError($"Error occured when trying tto save data to file: {fullPath} \n {ex}");
             }
         }
-        return loadedData;
-    }
 
-    public void Save(GameData data)
-    {
-        string fullPath = Path.Combine(dataDirPath, dataFileName);
-        try
+        private string EncryptDecrypt(string data)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
-            string dataToStore = JsonUtility.ToJson(data, true);
-
-            if (useEncryption)
-                dataToStore = EncryptDecrypt(dataToStore);
-
-            using (FileStream stream = new FileStream(fullPath, FileMode.Create))
+            string modifiedData = "";
+            for (int i = 0; i < data.Count(); i++)
             {
-                using (StreamWriter writer = new StreamWriter(stream))
-                {
-                    writer.Write(dataToStore);
-                }
+                modifiedData += (char)(data[i] ^ encyptionCodeWord[i % encyptionCodeWord.Count()]);
             }
+            return modifiedData;
         }
-        catch (Exception ex)
-        {
-
-            Debug.LogError($"Error occured when trying tto save data to file: {fullPath} \n {ex}");
-        }
-    }
-
-    private string EncryptDecrypt(string data)
-    {
-        string modifiedData = "";
-        for (int i = 0; i < data.Count(); i++)
-        {
-            modifiedData += (char)(data[i] ^ encyptionCodeWord[i % encyptionCodeWord.Count()]);
-        }
-        return modifiedData;
     }
 }

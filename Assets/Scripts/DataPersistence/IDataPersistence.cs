@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.DataPersistence.Data;
 using UnityEngine;
 
-public interface IDataPersistence
+namespace Assets.Scripts.DataPersistence
 {
-    void LoadData(GameData data);
-    void SaveData(ref GameData data);
+    public interface IDataPersistence
+    {
+        void LoadData(GameData data);
+        void SaveData(ref GameData data);
+    }
 }

@@ -1,19 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Buildings;
+using Assets.Scripts.Map;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ShopManager : MonoBehaviour
+namespace Assets.Scripts.Managers
 {
-    public CustomCursor customCursor;
-
-    public void BuyBuilding(Building building)
+    public class ShopManager : MonoBehaviour
     {
-        FindObjectOfType<Scenes>().LoadMap();
+        public CustomCursor customCursor;
 
-        customCursor.UseCursor(building);
+        public void BuyBuilding(Building building)
+        {
+            FindObjectOfType<Scenes>().LoadMap();
 
-        StaticClass.BoughtBuilding = building;
-        StaticClass.CustomCursor = customCursor;
+            customCursor.UseCursor(building);
+
+            StaticClass.BoughtBuilding = building;
+            StaticClass.CustomCursor = customCursor;
+        }
     }
 }
