@@ -21097,7 +21097,7 @@ GameObject:
   - component: {fileID: 478294397}
   - component: {fileID: 478294398}
   m_Layer: 0
-  m_Name: DataPersistenceManager
+  m_Name: SaveSystem Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21130,8 +21130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc3886109282346949e882a825adda54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fileName: data.game
-  useEncryption: 0
+  buildingPrefab: {fileID: -2586480445597315956, guid: fb6cbf3d571774e879aae3fe90dd57fb, type: 3}
 --- !u!1 &479085686
 GameObject:
   m_ObjectHideFlags: 0

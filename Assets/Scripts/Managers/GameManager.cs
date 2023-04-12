@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using System.Linq;
 using Assets.Scripts.Map;
 using Assets.Scripts.Buildings;
 
@@ -14,6 +10,16 @@ namespace Assets.Scripts.Managers
         private CustomCursor customCursor;
         public Tile[] tiles;
 
+        public static GameManager instance { get; private set; }
+
+        private void Awake()
+        {
+            if (instance != null)
+                Debug.LogError("Found more than one Game Managers in the scene");
+
+            instance = this;
+        }
+
         private void Start()
         {
             buildingToPlace = StaticClass.BoughtBuilding;
@@ -22,8 +28,8 @@ namespace Assets.Scripts.Managers
 
         private void Update()
         {
-            if (buildingToPlace != null)
-                buildingToPlace.PlaceBuilding(customCursor, tiles);
+            if (buildingToPlace != null && Input.GetMouseButton(0))
+                buildingToPlace.PlaceBuilding(customCursor);
         }
     }
 }

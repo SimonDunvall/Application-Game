@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using Assets.Scripts.Buildings;
 using Assets.Scripts.Map;
-using UnityEngine;
 
 namespace Assets.Scripts
 {

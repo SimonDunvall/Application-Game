@@ -1,10 +1,13 @@
-using System;
 using Assets.Scripts.Map;
+using UnityEngine;
 
 namespace Assets.Scripts.Buildings
 {
     internal interface IBuilding
     {
-        void PlaceBuilding(CustomCursor customCursor, Tile[] tiles);
+        string Type { get; set; }
+        Vector3 Pos { get; set; }
+
+        void PlaceBuilding(CustomCursor customCursor);
     }
 }
