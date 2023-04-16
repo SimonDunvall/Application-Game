@@ -1,12 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using Assets.Scripts.Buildings;
-using Assets.Scripts.Map;
 using Assets.Scripts.SaveSystem;
-using Assets.Scripts.SaveSystem.Data;
 using UnityEngine;
 
 public class FileDataHandler

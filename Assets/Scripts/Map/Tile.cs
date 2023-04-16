@@ -15,20 +15,44 @@ namespace Assets.Scripts.Map
             SaveSystemManager.tiles.Remove(this);
         }
 
-        internal static List<Tile> FindAllTileNeighbors(Vector2 tilePosition)
-        {
-            List<Tile> allNeighbouringTiles = new List<Tile>();
-            foreach (Vector2 neighbourPosition in neighbourPositions)
-            {
-                Vector3 position = tilePosition + neighbourPosition;
-                allNeighbouringTiles.AddRange(GameManager.instance.tiles.Where(tile => tile.transform.position == position));
-            }
-            return allNeighbouringTiles;
-        }
-
         internal static Tile FindTile(Vector3 posistion)
         {
             return GameManager.instance.tiles.FirstOrDefault(t => t.transform.position == posistion);
+        }
+
+        internal List<Tile> FindAllTileNeighbors()
+        {
+            List<Tile> neighbouringTiles = new List<Tile>();
+            foreach (Vector2 neighbourPosition in neighbourPositions)
+            {
+                Vector3 position = (Vector2)this.transform.position + neighbourPosition;
+                neighbouringTiles.AddRange(GameManager.instance.tiles.Where(tile => tile.transform.position == position));
+            }
+            return neighbouringTiles;
+        }
+
+        internal void SetCloseTilesOccupied()
+        {
+            var tiles = this.FindAllTileNeighbors();
+            tiles.Add(this);
+            tiles.ForEach(tile => tile.isOccupied = true);
+            SaveSystemManager.tiles.AddRange(tiles);
+        }
+
+        internal static Tile GetNearestTile()
+        {
+            Tile nearestTile = null;
+            float shortestDistance = float.MaxValue;
+            foreach (var tile in GameManager.instance.tiles)
+            {
+                float dist = Vector2.Distance(tile.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                if (dist < shortestDistance)
+                {
+                    shortestDistance = dist;
+                    nearestTile = tile;
+                }
+            }
+            return nearestTile;
         }
 
         private static readonly Vector2[] neighbourPositions =

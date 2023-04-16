@@ -4,6 +4,7 @@ using Assets.Scripts.Buildings;
 using Assets.Scripts.Map;
 using System.Linq;
 using Assets.Scripts.SaveSystem.Data;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.SaveSystem
 {
@@ -13,6 +14,7 @@ namespace Assets.Scripts.SaveSystem
 
         public static List<Building> buildings = new List<Building>();
         public static List<Tile> tiles = new List<Tile>();
+        static bool hasLoadedSave = false;
 
         private FileDataHandler dataHandler;
 
@@ -20,35 +22,66 @@ namespace Assets.Scripts.SaveSystem
 
         private void Awake()
         {
-            if (instance != null)
-                Debug.LogError("Found more than one Save Managers in the scene");
+            if (instance != null && instance != this)
+            {
+                Destroy(this);
+            }
+            else
+            {
+                instance = this;
+            }
 
-            instance = this;
+            this.dataHandler = new FileDataHandler(Application.persistentDataPath);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         private void Start()
         {
-            this.dataHandler = new FileDataHandler(Application.persistentDataPath);
-            LoadGame();
+            Debug.Log("tiles to quick load " + StaticClass.tilesToSave.Count());
+            //Loads tiles from before the scene switched
+            if (StaticClass.tilesToSave.Count() > 0)
+            {
+                foreach (var pos in StaticClass.tilesToSave)
+                {
+                    var tile = Tile.FindTile(pos);
+                    tile.isOccupied = true;
+                    tiles.Add(tile);
+                }
+                StaticClass.tilesToSave.Clear();
+            }
+            Debug.Log("tiles after quick load " + tiles.Count());
         }
 
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (!hasLoadedSave)
+            {
+                hasLoadedSave = true;
+                LoadGame();
+            }
+        }
 
         private void OnApplicationQuit()
         {
             SaveGame();
         }
 
-        void LoadGame()
+        public void LoadGame()
         {
             dataHandler.Load(new BuildingData());
             dataHandler.Load(new TileData());
         }
 
 
-        void SaveGame()
+        public void SaveGame()
         {
-            dataHandler.Save((new BuildingData()), SaveSystemManager.buildings.Count());
-            dataHandler.Save((new TileData()), SaveSystemManager.tiles.Count());
+            dataHandler.Save((new BuildingData()), buildings.Count());
+            dataHandler.Save((new TileData()), tiles.Count());
+        }
+
+        void OnDestroy()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
     }
 }

@@ -40837,6 +40837,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd708eb11a3f2458ab95928ce8d164b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  customCursor: {fileID: 0}
   tiles:
   - {fileID: 1670698626}
   - {fileID: 213614585}

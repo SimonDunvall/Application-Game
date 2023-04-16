@@ -1,4 +1,3 @@
-using Assets.Scripts.Map;
 using UnityEngine;
 
 namespace Assets.Scripts.Buildings
@@ -8,6 +7,6 @@ namespace Assets.Scripts.Buildings
         string Type { get; set; }
         Vector3 Pos { get; set; }
 
-        void PlaceBuilding(CustomCursor customCursor);
+        void PlaceBuilding();
     }
 }

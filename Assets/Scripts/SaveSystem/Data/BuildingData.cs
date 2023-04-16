@@ -8,8 +8,8 @@ namespace Assets.Scripts.SaveSystem.Data
     [System.Serializable]
     public class BuildingData : IDataPersistence
     {
-        public string SUB { get => "/building"; }
-        public string COUNT_SUB { get => "/building.count"; }
+        public string SUB { get => "/buildings/building"; }
+        public string COUNT_SUB { get => "/buildings/building.count"; }
 
         public string type;
         public float[] posistion = new float[3];
@@ -32,7 +32,7 @@ namespace Assets.Scripts.SaveSystem.Data
 
         public void SaveData(BinaryFormatter formatter, FileStream stream, int i)
         {
-            formatter.Serialize(stream, new BuildingData((Building)SaveSystemManager.buildings[i]));
+            formatter.Serialize(stream, new BuildingData(SaveSystemManager.buildings[i]));
         }
 
         public void LoadData(BinaryFormatter formatter, FileStream stream)

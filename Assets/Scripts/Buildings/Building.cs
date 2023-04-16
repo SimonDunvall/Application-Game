@@ -24,41 +24,22 @@ namespace Assets.Scripts.Buildings
             DontDestroyOnLoad(gameObject);
         }
 
-        private void OnDestroy()
+        public void PlaceBuilding()
         {
-            SaveSystemManager.buildings.Remove(this);
-        }
-
-        public void PlaceBuilding(CustomCursor customCursor)
-        {
+            var customCursor = StaticClass.CustomCursor;
             var tiles = GameManager.instance.tiles;
-            Tile nearestTile = null;
-            float shortestDistance = float.MaxValue;
-            foreach (var tile in tiles)
-            {
-                float dist = Vector2.Distance(tile.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
-                if (dist < shortestDistance)
-                {
-                    shortestDistance = dist;
-                    nearestTile = tile;
-                }
-            }
+            Tile nearestTile = Tile.GetNearestTile();
 
-            List<Tile> allNeighbouringTiles = Tile.FindAllTileNeighbors(nearestTile.transform.position);
-            if (nearestTile.isOccupied == false && allNeighbouringTiles.Count == 8 && allNeighbouringTiles.All(tile => tile.isOccupied == false))
+            List<Tile> neighbouringTiles = nearestTile.FindAllTileNeighbors();
+            neighbouringTiles.Add(nearestTile);
+            if (neighbouringTiles.Count == 9 && neighbouringTiles.All(tile => tile.isOccupied == false))
             {
                 CreateObject(this, nearestTile.transform.position);
 
-                foreach (var tile in allNeighbouringTiles)
-                {
-                    tile.isOccupied = true;
-                    SaveSystemManager.tiles.Add(tile);
-                }
-                nearestTile.isOccupied = true;
-                SaveSystemManager.tiles.Add(nearestTile);
-                StaticClass.BoughtBuilding = null;
-                StaticClass.CustomCursor = null;
+                nearestTile.SetCloseTilesOccupied();
+
                 customCursor.DisableCursor();
+                GameManager.instance.ResetValues();
             }
         }
 
