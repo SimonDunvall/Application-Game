@@ -37,7 +37,6 @@ namespace Assets.Scripts.SaveSystem
 
         private void Start()
         {
-            Debug.Log("tiles to quick load " + StaticClass.tilesToSave.Count());
             //Loads tiles from before the scene switched
             if (StaticClass.tilesToSave.Count() > 0)
             {
@@ -49,7 +48,6 @@ namespace Assets.Scripts.SaveSystem
                 }
                 StaticClass.tilesToSave.Clear();
             }
-            Debug.Log("tiles after quick load " + tiles.Count());
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
