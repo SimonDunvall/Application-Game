@@ -1,15 +1,19 @@
 using UnityEngine;
 using Assets.Scripts.Map;
 using Assets.Scripts.Buildings;
+using TMPro;
 using Assets.Scripts.SaveSystem;
-using System.Linq;
 
 namespace Assets.Scripts.Managers
 {
     public class GameManager : MonoBehaviour
     {
+        public TMP_Text goldDisplay;
+        public TMP_Text woodDisplay;
+        public TMP_Text stoneDisplay;
+        public TMP_Text MetalDisplay;
+
         private IBuilding buildingToPlace;
-        public CustomCursor customCursor;
         public Tile[] tiles;
 
         public static GameManager instance { get; private set; }
@@ -29,7 +33,6 @@ namespace Assets.Scripts.Managers
         private void Start()
         {
             buildingToPlace = StaticClass.BoughtBuilding;
-            customCursor = StaticClass.CustomCursor;
         }
 
         private void Update()
@@ -41,7 +44,6 @@ namespace Assets.Scripts.Managers
         internal void ResetValues()
         {
             buildingToPlace = null;
-            customCursor = null;
 
             StaticClass.BoughtBuilding = null;
             StaticClass.CustomCursor = null;

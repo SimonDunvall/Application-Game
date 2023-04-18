@@ -14,6 +14,13 @@ namespace Assets.Scripts.SaveSystem
 
         public static List<Building> buildings = new List<Building>();
         public static List<Tile> tiles = new List<Tile>();
+        public static Resources resources = new Resources()
+        {
+            gold = 0,
+            wood = 0,
+            stone = 0,
+            metal = 0
+        };
         static bool hasLoadedSave = false;
 
         private FileDataHandler dataHandler;
@@ -50,6 +57,11 @@ namespace Assets.Scripts.SaveSystem
             }
         }
 
+        private void Update()
+        {
+            Resources.UpdateResources();
+        }
+
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if (!hasLoadedSave)
@@ -68,6 +80,7 @@ namespace Assets.Scripts.SaveSystem
         {
             dataHandler.Load(new BuildingData());
             dataHandler.Load(new TileData());
+            dataHandler.Load(new ResourcesData());
         }
 
 
@@ -75,6 +88,7 @@ namespace Assets.Scripts.SaveSystem
         {
             dataHandler.Save((new BuildingData()), buildings.Count());
             dataHandler.Save((new TileData()), tiles.Count());
+            dataHandler.Save((new ResourcesData()), 1);
         }
 
         void OnDestroy()

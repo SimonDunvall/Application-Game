@@ -30,11 +30,6 @@ namespace Assets.Scripts.SaveSystem.Data
         {
         }
 
-        public void SaveData(BinaryFormatter formatter, FileStream stream, int i)
-        {
-            formatter.Serialize(stream, new BuildingData(SaveSystemManager.buildings[i]));
-        }
-
         public void LoadData(BinaryFormatter formatter, FileStream stream)
         {
             var data = (BuildingData)formatter.Deserialize(stream);
@@ -43,6 +38,11 @@ namespace Assets.Scripts.SaveSystem.Data
             Building building = Building.CreateObject(SaveSystemManager.instance.buildingPrefab, posistion);
 
             building.Type = this.type;
+        }
+
+        public void SaveData(BinaryFormatter formatter, FileStream stream, int i)
+        {
+            formatter.Serialize(stream, new BuildingData(SaveSystemManager.buildings[i]));
         }
     }
 }
