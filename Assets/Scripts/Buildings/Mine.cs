@@ -7,21 +7,21 @@ using Assets.Scripts.Map;
 using Assets.Scripts.SaveSystem;
 using UnityEngine;
 
-public class TreeFarm : MonoBehaviour, IBuilding
+public class Mine : MonoBehaviour, IBuilding
 {
-    private string _type = "TreeFarm";
+    private string _type = "Mine";
     public string Type { get => _type; set => _type = value; }
     private Vector3 _pos;
     public Vector3 Pos { get => _pos; set => _pos = value; }
 
-    public int WoodPerMinute;
+    public int StonePerMinute;
     public int InnerStorageSize;
     public int InnerStorage { get; set; }
     private float nextIncreaseTime;
 
     private void Awake()
     {
-        SaveSystemManager.treeFarms.Add(this);
+        SaveSystemManager.mine.Add(this);
     }
 
     private void Start()
@@ -31,15 +31,15 @@ public class TreeFarm : MonoBehaviour, IBuilding
 
     private void Update()
     {
-        UpdateWood();
+        UpdateStone();
     }
 
-    private void UpdateWood()
+    private void UpdateStone()
     {
         if (Time.time > nextIncreaseTime && InnerStorage < InnerStorageSize)
         {
             nextIncreaseTime = Time.time + 60;
-            InnerStorage += WoodPerMinute;
+            InnerStorage += StonePerMinute;
         }
         if (InnerStorage > InnerStorageSize)
             InnerStorage = InnerStorageSize;
@@ -69,7 +69,7 @@ public class TreeFarm : MonoBehaviour, IBuilding
         }
     }
 
-    public static TreeFarm CreateObject(TreeFarm preFab, Vector3 position)
+    public static Mine CreateObject(Mine preFab, Vector3 position)
     {
         return Instantiate(preFab, position, Quaternion.identity);
     }

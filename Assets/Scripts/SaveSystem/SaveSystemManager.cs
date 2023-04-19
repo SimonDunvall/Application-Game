@@ -12,9 +12,11 @@ namespace Assets.Scripts.SaveSystem
     {
         [SerializeField] public TestBuilding buildingPrefab;
         [SerializeField] public TreeFarm treeFarmPrefab;
+        [SerializeField] public Mine minePrefab;
 
         public static List<TestBuilding> testBuildings = new List<TestBuilding>();
         public static List<TreeFarm> treeFarms = new List<TreeFarm>();
+        public static List<Mine> mine = new List<Mine>();
         public static List<Tile> tiles = new List<Tile>();
         public static Resources resources = new Resources()
         {
@@ -82,6 +84,7 @@ namespace Assets.Scripts.SaveSystem
         {
             dataHandler.Load(new TestBuildingData());
             dataHandler.Load(new TreeFarmData());
+            dataHandler.Load(new MineData());
             dataHandler.Load(new TileData());
             dataHandler.Load(new ResourcesData());
         }
@@ -91,6 +94,7 @@ namespace Assets.Scripts.SaveSystem
         {
             dataHandler.Save((new TestBuildingData()), testBuildings.Count());
             dataHandler.Save((new TreeFarmData()), treeFarms.Count());
+            dataHandler.Save((new MineData()), mine.Count());
             dataHandler.Save((new TileData()), tiles.Count());
             dataHandler.Save((new ResourcesData()), 1);
         }
