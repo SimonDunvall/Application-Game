@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Buildings
 {
-    public class Building : MonoBehaviour, IBuilding
+    public class TestBuilding : MonoBehaviour, IBuilding
     {
         private string _type = "testBuilding";
         public string Type { get => _type; set => _type = value; }
@@ -16,7 +16,7 @@ namespace Assets.Scripts.Buildings
 
         private void Awake()
         {
-            SaveSystemManager.buildings.Add(this);
+            SaveSystemManager.testBuildings.Add(this);
         }
 
         private void Start()
@@ -26,7 +26,7 @@ namespace Assets.Scripts.Buildings
 
         public void PlaceBuilding()
         {
-            var customCursor = StaticClass.CustomCursor;
+            var customCursor = StaticClass.GetCustomCursor();
             var tiles = GameManager.instance.tiles;
             Tile nearestTile = Tile.GetNearestTile();
 
@@ -43,9 +43,14 @@ namespace Assets.Scripts.Buildings
             }
         }
 
-        public static Building CreateObject(Building preFab, Vector3 posistion)
+        public static TestBuilding CreateObject(TestBuilding preFab, Vector3 posistion)
         {
             return Instantiate(preFab, posistion, Quaternion.identity);
+        }
+
+        public Sprite GetSprite()
+        {
+            return this.GetComponent<SpriteRenderer>().sprite;
         }
     }
 }

@@ -10,9 +10,11 @@ namespace Assets.Scripts.SaveSystem
 {
     public class SaveSystemManager : MonoBehaviour
     {
-        [SerializeField] public Building buildingPrefab;
+        [SerializeField] public TestBuilding buildingPrefab;
+        [SerializeField] public TreeFarm treeFarmPrefab;
 
-        public static List<Building> buildings = new List<Building>();
+        public static List<TestBuilding> testBuildings = new List<TestBuilding>();
+        public static List<TreeFarm> treeFarms = new List<TreeFarm>();
         public static List<Tile> tiles = new List<Tile>();
         public static Resources resources = new Resources()
         {
@@ -45,15 +47,15 @@ namespace Assets.Scripts.SaveSystem
         private void Start()
         {
             //Loads tiles from before the scene switched
-            if (StaticClass.tilesToSave.Count() > 0)
+            if (StaticClass.GettilesToSave().Count() > 0)
             {
-                foreach (var pos in StaticClass.tilesToSave)
+                foreach (var pos in StaticClass.GettilesToSave())
                 {
                     var tile = Tile.FindTile(pos);
                     tile.isOccupied = true;
                     tiles.Add(tile);
                 }
-                StaticClass.tilesToSave.Clear();
+                StaticClass.GettilesToSave().Clear();
             }
         }
 
@@ -78,7 +80,8 @@ namespace Assets.Scripts.SaveSystem
 
         public void LoadGame()
         {
-            dataHandler.Load(new BuildingData());
+            dataHandler.Load(new TestBuildingData());
+            dataHandler.Load(new TreeFarmData());
             dataHandler.Load(new TileData());
             dataHandler.Load(new ResourcesData());
         }
@@ -86,7 +89,8 @@ namespace Assets.Scripts.SaveSystem
 
         public void SaveGame()
         {
-            dataHandler.Save((new BuildingData()), buildings.Count());
+            dataHandler.Save((new TestBuildingData()), testBuildings.Count());
+            dataHandler.Save((new TreeFarmData()), treeFarms.Count());
             dataHandler.Save((new TileData()), tiles.Count());
             dataHandler.Save((new ResourcesData()), 1);
         }

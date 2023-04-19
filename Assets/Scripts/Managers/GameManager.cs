@@ -2,7 +2,6 @@ using UnityEngine;
 using Assets.Scripts.Map;
 using Assets.Scripts.Buildings;
 using TMPro;
-using Assets.Scripts.SaveSystem;
 
 namespace Assets.Scripts.Managers
 {
@@ -32,7 +31,7 @@ namespace Assets.Scripts.Managers
 
         private void Start()
         {
-            buildingToPlace = StaticClass.BoughtBuilding;
+            buildingToPlace = StaticClass.GetBoughtBuilding();
         }
 
         private void Update()
@@ -45,8 +44,8 @@ namespace Assets.Scripts.Managers
         {
             buildingToPlace = null;
 
-            StaticClass.BoughtBuilding = null;
-            StaticClass.CustomCursor = null;
+            StaticClass.SetBoughtBuilding(null);
+            StaticClass.SetCustomCursor(null);
         }
     }
 }

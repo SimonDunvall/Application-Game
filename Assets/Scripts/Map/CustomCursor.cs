@@ -11,10 +11,10 @@ namespace Assets.Scripts.Map
             Cursor.visible = true;
         }
 
-        internal void UseCursor(Building building)
+        internal void UseCursor(IBuilding building)
         {
             gameObject.SetActive(true);
-            GetComponent<SpriteRenderer>().sprite = building.GetComponent<SpriteRenderer>().sprite;
+            GetComponent<SpriteRenderer>().sprite = building.GetSprite();
             Cursor.visible = false;
         }
 

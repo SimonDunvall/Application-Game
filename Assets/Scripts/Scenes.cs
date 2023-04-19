@@ -13,7 +13,7 @@ namespace Assets.Scripts
 
         public void LoadShop()
         {
-            SaveSystemManager.tiles.ForEach(tile => StaticClass.tilesToSave.Add(tile.transform.position));
+            SaveSystemManager.tiles.ForEach(tile => StaticClass.GettilesToSave().Add(tile.transform.position));
             SceneManager.LoadScene(1);
         }
     }

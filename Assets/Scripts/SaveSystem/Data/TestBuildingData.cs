@@ -6,15 +6,15 @@ using UnityEngine;
 namespace Assets.Scripts.SaveSystem.Data
 {
     [System.Serializable]
-    public class BuildingData : IDataPersistence
+    public class TestBuildingData : IDataPersistence
     {
-        public string SUB { get => "/buildings/building"; }
-        public string COUNT_SUB { get => "/buildings/building.count"; }
+        public string SUB { get => "/buildings/testbuilding"; }
+        public string COUNT_SUB { get => "/buildings/testbuilding.count"; }
 
         public string type;
         public float[] posistion = new float[3];
 
-        public BuildingData(Building building)
+        public TestBuildingData(TestBuilding building)
         {
             type = building.Type;
 
@@ -26,23 +26,23 @@ namespace Assets.Scripts.SaveSystem.Data
             };
         }
 
-        public BuildingData()
+        public TestBuildingData()
         {
         }
 
         public void LoadData(BinaryFormatter formatter, FileStream stream)
         {
-            var data = (BuildingData)formatter.Deserialize(stream);
+            var data = (TestBuildingData)formatter.Deserialize(stream);
 
             Vector3 posistion = new Vector3(data.posistion[0], data.posistion[1], data.posistion[2]);
-            Building building = Building.CreateObject(SaveSystemManager.instance.buildingPrefab, posistion);
+            TestBuilding building = TestBuilding.CreateObject(SaveSystemManager.instance.buildingPrefab, posistion);
 
             building.Type = this.type;
         }
 
         public void SaveData(BinaryFormatter formatter, FileStream stream, int i)
         {
-            formatter.Serialize(stream, new BuildingData(SaveSystemManager.buildings[i]));
+            formatter.Serialize(stream, new TestBuildingData(SaveSystemManager.testBuildings[i]));
         }
     }
 }

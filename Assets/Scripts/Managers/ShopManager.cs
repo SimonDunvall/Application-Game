@@ -8,14 +8,14 @@ namespace Assets.Scripts.Managers
     {
         public CustomCursor customCursor;
 
-        public void BuyBuilding(Building building)
+        public void BuyBuilding(IBuilding building)
         {
             FindObjectOfType<Scenes>().LoadMap();
 
             customCursor.UseCursor(building);
 
-            StaticClass.BoughtBuilding = building;
-            StaticClass.CustomCursor = customCursor;
+            StaticClass.SetBoughtBuilding(building);
+            StaticClass.SetCustomCursor(customCursor);
         }
     }
 }
