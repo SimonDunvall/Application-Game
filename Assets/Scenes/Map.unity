@@ -21250,7 +21250,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc3886109282346949e882a825adda54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingPrefab: {fileID: -2586480445597315956, guid: fb6cbf3d571774e879aae3fe90dd57fb, type: 3}
+  testBuildingPrefab: {fileID: -8333805196302294762, guid: fb6cbf3d571774e879aae3fe90dd57fb, type: 3}
+  treeFarmPrefab: {fileID: 6030956135893712393, guid: 00066f3324dc14f39958f013b2053a7c, type: 3}
+  minePrefab: {fileID: -2719850611512882208, guid: 6713c331647034a078695a7bc397a0a3, type: 3}
 --- !u!1 &479085686
 GameObject:
   m_ObjectHideFlags: 0

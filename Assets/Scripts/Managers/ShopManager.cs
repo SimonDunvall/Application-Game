@@ -8,7 +8,22 @@ namespace Assets.Scripts.Managers
     {
         public CustomCursor customCursor;
 
-        public void BuyBuilding(IBuilding building)
+        public void BuyTestBuilding(TestBuilding building)
+        {
+            BuyBuilding(building);
+        }
+
+        public void BuyTreeFarm(TreeFarm building)
+        {
+            BuyBuilding(building);
+        }
+
+        public void BuyMine(Mine building)
+        {
+            BuyBuilding(building);
+        }
+
+        private void BuyBuilding(IBuilding building)
         {
             FindObjectOfType<Scenes>().LoadMap();
 

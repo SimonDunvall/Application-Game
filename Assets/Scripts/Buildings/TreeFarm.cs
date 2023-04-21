@@ -17,7 +17,8 @@ public class TreeFarm : MonoBehaviour, IBuilding
     public int WoodPerMinute;
     public int InnerStorageSize;
     public int InnerStorage { get; set; }
-    private float nextIncreaseTime;
+    public float TimeLeft { get; set; }
+    private float nextIncreaseTime = 60f;
 
     private void Awake()
     {
@@ -31,18 +32,35 @@ public class TreeFarm : MonoBehaviour, IBuilding
 
     private void Update()
     {
+        TimeLeft = nextIncreaseTime - Time.time;
+
         UpdateWood();
     }
 
     private void UpdateWood()
     {
-        if (Time.time > nextIncreaseTime && InnerStorage < InnerStorageSize)
+        if (TimeLeft <= 0 && InnerStorage < InnerStorageSize)
         {
-            nextIncreaseTime = Time.time + 60;
+            nextIncreaseTime = Time.time + 60f;
             InnerStorage += WoodPerMinute;
+            Debug.Log($"added wood to innerstorage {InnerStorage}");
         }
         if (InnerStorage > InnerStorageSize)
             InnerStorage = InnerStorageSize;
+    }
+
+    private void OnMouseDown()
+    {
+        if (InnerStorage > 0)
+        {
+            SaveSystemManager.resources.wood += InnerStorage;
+            InnerStorage = 0;
+        }
+        else
+        {
+            Debug.Log($"innerstorage is: {InnerStorage}");
+            Debug.Log($"Time to next payout is in: {TimeLeft}");
+        }
     }
 
     public Sprite GetSprite()

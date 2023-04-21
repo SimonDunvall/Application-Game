@@ -35,7 +35,7 @@ namespace Assets.Scripts.SaveSystem.Data
             var data = (TestBuildingData)formatter.Deserialize(stream);
 
             Vector3 posistion = new Vector3(data.posistion[0], data.posistion[1], data.posistion[2]);
-            TestBuilding building = TestBuilding.CreateObject(SaveSystemManager.instance.buildingPrefab, posistion);
+            TestBuilding building = TestBuilding.CreateObject(SaveSystemManager.instance.testBuildingPrefab, posistion);
 
             building.Type = this.type;
         }

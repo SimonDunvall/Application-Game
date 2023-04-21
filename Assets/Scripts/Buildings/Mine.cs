@@ -17,7 +17,8 @@ public class Mine : MonoBehaviour, IBuilding
     public int StonePerMinute;
     public int InnerStorageSize;
     public int InnerStorage { get; set; }
-    private float nextIncreaseTime;
+    public float TimeLeft { get; set; }
+    private float nextIncreaseTime = 60f;
 
     private void Awake()
     {
@@ -31,18 +32,35 @@ public class Mine : MonoBehaviour, IBuilding
 
     private void Update()
     {
+        TimeLeft = nextIncreaseTime - Time.time;
+
         UpdateStone();
     }
 
     private void UpdateStone()
     {
-        if (Time.time > nextIncreaseTime && InnerStorage < InnerStorageSize)
+        if (TimeLeft <= 0 && InnerStorage < InnerStorageSize)
         {
-            nextIncreaseTime = Time.time + 60;
+            nextIncreaseTime = Time.time + 60f;
             InnerStorage += StonePerMinute;
+            Debug.Log($"added stone to innerstorage {InnerStorage}");
         }
         if (InnerStorage > InnerStorageSize)
             InnerStorage = InnerStorageSize;
+    }
+
+    private void OnMouseDown()
+    {
+        if (InnerStorage > 0)
+        {
+            SaveSystemManager.resources.stone += InnerStorage;
+            InnerStorage = 0;
+        }
+        else
+        {
+            Debug.Log($"innerstorage is {InnerStorage}");
+            Debug.Log($"Time to next payout is in {TimeLeft}");
+        }
     }
 
     public Sprite GetSprite()

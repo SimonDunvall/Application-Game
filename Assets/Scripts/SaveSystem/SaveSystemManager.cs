@@ -10,7 +10,7 @@ namespace Assets.Scripts.SaveSystem
 {
     public class SaveSystemManager : MonoBehaviour
     {
-        [SerializeField] public TestBuilding buildingPrefab;
+        [SerializeField] public TestBuilding testBuildingPrefab;
         [SerializeField] public TreeFarm treeFarmPrefab;
         [SerializeField] public Mine minePrefab;
 
