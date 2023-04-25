@@ -7,18 +7,16 @@ using Assets.Scripts.Map;
 using Assets.Scripts.SaveSystem;
 using UnityEngine;
 
-public class Mine : MonoBehaviour, IBuilding
+public class Mine : MonoBehaviour, IBuilding, IResourceBuilding
 {
-    private string _type = "Mine";
-    public string Type { get => _type; set => _type = value; }
-    private Vector3 _pos;
-    public Vector3 Pos { get => _pos; set => _pos = value; }
+    public string Type { get => "Mine"; }
 
-    public int StonePerMinute;
+    public int ResourecePerMinue;
     public int InnerStorageSize;
     public int InnerStorage { get; set; }
     public float TimeLeft { get; set; }
     private float nextIncreaseTime = 60f;
+    public string ResourceType { get => "Stone"; }
 
     private void Awake()
     {
@@ -32,34 +30,36 @@ public class Mine : MonoBehaviour, IBuilding
 
     private void Update()
     {
-        TimeLeft = nextIncreaseTime - Time.time;
-
-        UpdateStone();
+        UpdateTimer();
+        UpdateResource();
     }
 
-    private void UpdateStone()
+    private void UpdateTimer()
+    {
+        TimeLeft = nextIncreaseTime - Time.time;
+        UiManager.instance.UpdateTimerText((int)TimeLeft, this.GetInstanceID());
+    }
+
+    private void UpdateResource()
     {
         if (TimeLeft <= 0 && InnerStorage < InnerStorageSize)
         {
             nextIncreaseTime = Time.time + 60f;
-            InnerStorage += StonePerMinute;
-            Debug.Log($"added stone to innerstorage {InnerStorage}");
+            InnerStorage += ResourecePerMinue;
+            UiManager.instance.UpdateResourceText(InnerStorage.ToString(), ResourceType, this.GetInstanceID());
+
         }
         if (InnerStorage > InnerStorageSize)
             InnerStorage = InnerStorageSize;
     }
 
-    private void OnMouseDown()
+    public void CollectStorage()
     {
         if (InnerStorage > 0)
         {
             SaveSystemManager.resources.stone += InnerStorage;
             InnerStorage = 0;
-        }
-        else
-        {
-            Debug.Log($"innerstorage is {InnerStorage}");
-            Debug.Log($"Time to next payout is in {TimeLeft}");
+            UiManager.instance.UpdateResourceText(InnerStorage.ToString(), ResourceType, this.GetInstanceID());
         }
     }
 
@@ -70,8 +70,6 @@ public class Mine : MonoBehaviour, IBuilding
 
     public void PlaceBuilding()
     {
-        var customCursor = StaticClass.GetCustomCursor();
-        var tiles = GameManager.instance.tiles;
         Tile nearestTile = Tile.GetNearestTile();
 
         List<Tile> neighbouringTiles = nearestTile.FindAllTileNeighbors();
@@ -81,8 +79,7 @@ public class Mine : MonoBehaviour, IBuilding
             CreateObject(this, nearestTile.transform.position);
 
             nearestTile.SetCloseTilesOccupied();
-
-            customCursor.DisableCursor();
+            StaticClass.GetCustomCursor().DisableCursor();
             GameManager.instance.ResetValues();
         }
     }

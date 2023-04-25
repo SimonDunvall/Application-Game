@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2597442141284679955}
   m_Layer: 0
   m_Name: TreeFarm
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98,8 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96869362275984abb882ccfa707a6f0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WoodPerMinute: 1
-  InnerStorageSize: 3
+  ResourecePerMinue: 1
+  InnerStorageSize: 10
 --- !u!61 &2597442141284679955
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -9,10 +9,7 @@ namespace Assets.Scripts.Buildings
 {
     public class TestBuilding : MonoBehaviour, IBuilding
     {
-        private string _type = "testBuilding";
-        public string Type { get => _type; set => _type = value; }
-        private Vector3 _pos;
-        public Vector3 Pos { get => _pos; set => _pos = value; }
+        public string Type { get => "testBuilding"; }
 
         private void Awake()
         {

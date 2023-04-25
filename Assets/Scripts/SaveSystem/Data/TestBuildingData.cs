@@ -36,8 +36,6 @@ namespace Assets.Scripts.SaveSystem.Data
 
             Vector3 posistion = new Vector3(data.posistion[0], data.posistion[1], data.posistion[2]);
             TestBuilding building = TestBuilding.CreateObject(SaveSystemManager.instance.testBuildingPrefab, posistion);
-
-            building.Type = this.type;
         }
 
         public void SaveData(BinaryFormatter formatter, FileStream stream, int i)

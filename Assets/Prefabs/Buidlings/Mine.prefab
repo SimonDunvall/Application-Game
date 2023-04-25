@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 404105865010956761}
   m_Layer: 0
   m_Name: Mine
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98,8 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b77c8f68fbd8b40338f0e3116783396c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StonePerMinute: 1
-  InnerStorageSize: 3
+  ResourecePerMinue: 1
+  InnerStorageSize: 10
 --- !u!61 &404105865010956761
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Linq;
 using Assets.Scripts.SaveSystem;
 using Assets.Scripts.Managers;
+using UnityEngine.EventSystems;
 
 namespace Assets.Scripts.Map
 {
@@ -13,6 +14,12 @@ namespace Assets.Scripts.Map
         private void OnDestroy()
         {
             SaveSystemManager.tiles.Remove(this);
+        }
+
+        private void OnMouseDown()
+        {
+            if (!EventSystem.current.IsPointerOverGameObject())
+                UiManager.instance.CloseInspector();
         }
 
         internal static Tile FindTile(Vector3 posistion)

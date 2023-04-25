@@ -4,8 +4,7 @@ namespace Assets.Scripts.Buildings
 {
     public interface IBuilding
     {
-        string Type { get; set; }
-        Vector3 Pos { get; set; }
+        string Type { get; }
 
         Sprite GetSprite();
         void PlaceBuilding();

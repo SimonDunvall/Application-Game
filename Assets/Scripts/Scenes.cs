@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using Assets.Scripts.SaveSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,13 +10,30 @@ namespace Assets.Scripts
     {
         public void LoadMap()
         {
-            SceneManager.LoadScene(0);
+            StartCoroutine(LoadSceneAsync(0));
+            BuildingsSetActive(true);
         }
 
         public void LoadShop()
         {
             SaveSystemManager.tiles.ForEach(tile => StaticClass.GettilesToSave().Add(tile.transform.position));
-            SceneManager.LoadScene(1);
+            BuildingsSetActive(false);
+            StartCoroutine(LoadSceneAsync(1));
+        }
+
+        private void BuildingsSetActive(bool isActive)
+        {
+            SaveSystemManager.mine.ForEach(m => m.gameObject.SetActive(isActive));
+            SaveSystemManager.treeFarms.ForEach(m => m.gameObject.SetActive(isActive));
+            SaveSystemManager.testBuildings.ForEach(m => m.gameObject.SetActive(isActive));
+        }
+
+        IEnumerator LoadSceneAsync(int sceneIndex)
+        {
+            while (!SceneManager.LoadSceneAsync(sceneIndex).isDone)
+            {
+                yield return null;
+            }
         }
     }
 }
