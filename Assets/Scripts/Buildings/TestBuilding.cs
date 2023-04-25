@@ -9,7 +9,7 @@ namespace Assets.Scripts.Buildings
 {
     public class TestBuilding : MonoBehaviour, IBuilding
     {
-        public string Type { get => "testBuilding"; }
+        public string Type => "testBuilding";
 
         private void Awake()
         {
@@ -29,7 +29,7 @@ namespace Assets.Scripts.Buildings
 
             List<Tile> neighbouringTiles = nearestTile.FindAllTileNeighbors();
             neighbouringTiles.Add(nearestTile);
-            if (neighbouringTiles.Count == 9 && neighbouringTiles.All(tile => tile.isOccupied == false))
+            if (neighbouringTiles.Count == 9 && neighbouringTiles.All(tile => !tile.isOccupied))
             {
                 CreateObject(this, nearestTile.transform.position);
 
@@ -47,7 +47,7 @@ namespace Assets.Scripts.Buildings
 
         public Sprite GetSprite()
         {
-            return this.GetComponent<SpriteRenderer>().sprite;
+            return GetComponent<SpriteRenderer>().sprite;
         }
     }
 }

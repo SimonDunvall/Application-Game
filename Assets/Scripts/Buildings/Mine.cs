@@ -9,14 +9,14 @@ using UnityEngine;
 
 public class Mine : MonoBehaviour, IBuilding, IResourceBuilding
 {
-    public string Type { get => "Mine"; }
+    public string Type => "Mine";
 
-    public int ResourecePerMinue;
+    public int ResourcePerMinute;
     public int InnerStorageSize;
     public int InnerStorage { get; set; }
     public float TimeLeft { get; set; }
     private float nextIncreaseTime = 60f;
-    public string ResourceType { get => "Stone"; }
+    public string ResourceType => "Stone";
 
     private void Awake()
     {
@@ -45,7 +45,7 @@ public class Mine : MonoBehaviour, IBuilding, IResourceBuilding
         if (TimeLeft <= 0 && InnerStorage < InnerStorageSize)
         {
             nextIncreaseTime = Time.time + 60f;
-            InnerStorage += ResourecePerMinue;
+            InnerStorage += ResourcePerMinute;
             UiManager.instance.UpdateResourceText(InnerStorage.ToString(), ResourceType, this.GetInstanceID());
 
         }
@@ -65,7 +65,7 @@ public class Mine : MonoBehaviour, IBuilding, IResourceBuilding
 
     public Sprite GetSprite()
     {
-        return this.GetComponent<SpriteRenderer>().sprite;
+        return GetComponent<SpriteRenderer>().sprite;
     }
 
     public void PlaceBuilding()
@@ -74,7 +74,7 @@ public class Mine : MonoBehaviour, IBuilding, IResourceBuilding
 
         List<Tile> neighbouringTiles = nearestTile.FindAllTileNeighbors();
         neighbouringTiles.Add(nearestTile);
-        if (neighbouringTiles.Count == 9 && neighbouringTiles.All(tile => tile.isOccupied == false))
+        if (neighbouringTiles.Count == 9 && neighbouringTiles.All(tile => !tile.isOccupied))
         {
             CreateObject(this, nearestTile.transform.position);
 
