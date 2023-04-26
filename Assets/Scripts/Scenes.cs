@@ -1,5 +1,5 @@
-using System;
 using System.Collections;
+using System.Linq;
 using Assets.Scripts.SaveSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,7 +16,15 @@ namespace Assets.Scripts
 
         public void LoadShop()
         {
-            SaveSystemManager.tiles.ForEach(tile => StaticClass.GettilesToSave().Add(tile.transform.position));
+            foreach (var tile in SaveSystemManager.tiles)
+            {
+                Vector3 position = tile.transform.position;
+                if (!StaticClass.TilesToSave.Contains(position))
+                {
+                    StaticClass.TilesToSave.Add(position);
+                }
+            };
+
             BuildingsSetActive(false);
             StartCoroutine(LoadSceneAsync(1));
         }

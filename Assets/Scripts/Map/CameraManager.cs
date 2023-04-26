@@ -1,5 +1,6 @@
 using Assets.Scripts.Buildings;
 using UnityEngine;
+using System.Linq;
 
 namespace Assets.Scripts.Map
 {
@@ -36,8 +37,8 @@ namespace Assets.Scripts.Map
                 Vector2 rayOrigin = mousePos;
                 Vector2 rayDirection = (rayOrigin - (Vector2)Camera.main.transform.position).normalized;
 
-                RaycastHit2D hit = Physics2D.Raycast(rayOrigin, rayDirection);
-                if (hit)
+                RaycastHit2D[] hits = Physics2D.RaycastAll(rayOrigin, rayDirection);
+                foreach (var hit in hits.Where(hit => hit && hit.collider != null))
                 {
                     var building = hit.collider.GetComponent<IResourceBuilding>();
                     if (building != null)

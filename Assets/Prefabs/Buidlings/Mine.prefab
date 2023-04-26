@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b77c8f68fbd8b40338f0e3116783396c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ResourecePerMinue: 1
+  ResourcePerMinute: 1
   InnerStorageSize: 10
 --- !u!61 &404105865010956761
 BoxCollider2D:

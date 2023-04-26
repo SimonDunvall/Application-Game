@@ -49,21 +49,15 @@ namespace Assets.Scripts.SaveSystem
         private void Start()
         {
             //Loads tiles from before the scene switched
-            if (StaticClass.GettilesToSave().Count() > 0)
+            if (StaticClass.TilesToSave.Count() > 0)
             {
-                foreach (var pos in StaticClass.GettilesToSave())
+                foreach (var pos in StaticClass.TilesToSave)
                 {
                     var tile = Tile.FindTile(pos);
                     tile.isOccupied = true;
                     tiles.Add(tile);
                 }
-                StaticClass.GettilesToSave().Clear();
             }
-        }
-
-        private void Update()
-        {
-            Resources.UpdateResources();
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)

@@ -1,8 +1,9 @@
 using Assets.Scripts.SaveSystem;
 using TMPro;
-using UnityEngine;
 using System.Linq;
 using Assets.Scripts.Buildings;
+using UnityEngine;
+using Resources = Assets.Scripts.Resources;
 
 public class UiManager : MonoBehaviour
 {
@@ -43,6 +44,8 @@ public class UiManager : MonoBehaviour
         animatorStorage.SetTrigger("pop up");
         animatorTimer.SetTrigger("pop up");
         animatorLevelUp.SetTrigger("pop up");
+
+        Resources.UpdateResources();
     }
 
     public void CloseInspector()
@@ -55,7 +58,10 @@ public class UiManager : MonoBehaviour
     public void UpdateResourceText(string storageText, string type, int instaceId)
     {
         if (storage.activeSelf && BuildingId == instaceId)
+        {
             innerStorageText.text = $"{storageText} {type} \n(Collect)";
+            Resources.UpdateResources();
+        }
     }
 
     public void CollectResource()
@@ -78,7 +84,10 @@ public class UiManager : MonoBehaviour
     public void UpdateTimerText(int timeLeftText, int instaceId)
     {
         if (BuildingId == instaceId)
+        {
             timerText.text = $"{timeLeftText} Seconds";
+            Resources.UpdateResources();
+        }
     }
 
     public void LevelUpBuidling()
@@ -97,6 +106,9 @@ public class UiManager : MonoBehaviour
     internal void UpdateLevelText(int levelText, int instaceId)
     {
         if (levelUp.activeSelf && BuildingId == instaceId)
+        {
             levelUpText.text = $"Upgrade Cost: Free \n Level {levelText}";
+            Resources.UpdateResources();
+        }
     }
 }

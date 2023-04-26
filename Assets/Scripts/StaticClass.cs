@@ -31,16 +31,7 @@ namespace Assets.Scripts
             customCursor = value;
         }
 
-        private static List<Vector3> tilesToSave = new List<Vector3>();
-
-        public static List<Vector3> GettilesToSave()
-        {
-            return tilesToSave;
-        }
-
-        public static void SettilesToSave(List<Vector3> value)
-        {
-            tilesToSave = value;
-        }
+        private static List<Vector3> _tilesToSave = new List<Vector3>();
+        public static List<Vector3> TilesToSave { get => _tilesToSave; set => _tilesToSave = value; }
     }
 }
