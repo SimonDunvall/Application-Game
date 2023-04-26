@@ -12,11 +12,13 @@ namespace Assets.Scripts.SaveSystem.Data
         public string COUNT_SUB { get => "/buildings/testbuilding.count"; }
 
         public string type;
+        public int level;
         public float[] posistion = new float[3];
 
         public TestBuildingData(TestBuilding building)
         {
             type = building.Type;
+            level = building.Level;
 
             posistion = new float[]
             {
@@ -36,6 +38,8 @@ namespace Assets.Scripts.SaveSystem.Data
 
             Vector3 posistion = new Vector3(data.posistion[0], data.posistion[1], data.posistion[2]);
             TestBuilding building = TestBuilding.CreateObject(SaveSystemManager.instance.testBuildingPrefab, posistion);
+
+            building.Level = data.level;
         }
 
         public void SaveData(BinaryFormatter formatter, FileStream stream, int i)

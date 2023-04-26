@@ -42,7 +42,7 @@ namespace Assets.Scripts.Map
                     var building = hit.collider.GetComponent<IResourceBuilding>();
                     if (building != null)
                     {
-                        UiManager.instance.OpenInspector(building.InnerStorage.ToString(), (int)building.TimeLeft, building.ResourceType, building.GetInstanceID());
+                        UiManager.instance.OpenInspector(building.InnerStorage.ToString(), (int)building.TimeLeft, building.Level, building.ResourceType, building.GetInstanceID());
                     }
                 }
             }

@@ -10,6 +10,18 @@ namespace Assets.Scripts.Buildings
     public class TestBuilding : MonoBehaviour, IBuilding
     {
         public string Type => "testBuilding";
+        private int _level = 1;
+        public int Level
+        {
+            get
+            {
+                return _level;
+            }
+            set
+            {
+                _level = value;
+            }
+        }
 
         private void Awake()
         {
@@ -48,6 +60,11 @@ namespace Assets.Scripts.Buildings
         public Sprite GetSprite()
         {
             return GetComponent<SpriteRenderer>().sprite;
+        }
+
+        public void LevelUp()
+        {
+            Level += 1;
         }
     }
 }

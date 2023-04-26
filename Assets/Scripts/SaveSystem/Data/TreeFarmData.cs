@@ -1,5 +1,6 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Assets.Scripts.Buildings;
 using UnityEngine;
 
 namespace Assets.Scripts.SaveSystem.Data
@@ -11,6 +12,7 @@ namespace Assets.Scripts.SaveSystem.Data
         public string COUNT_SUB { get => "/buildings/treefarm.count"; }
 
         public string type;
+        public int level;
         public float[] posistion = new float[3];
 
         public int InnerStorage;
@@ -18,6 +20,7 @@ namespace Assets.Scripts.SaveSystem.Data
         public TreeFarmData(TreeFarm building)
         {
             type = building.Type;
+            level = building.Level;
 
             posistion = new float[]
             {
@@ -41,6 +44,7 @@ namespace Assets.Scripts.SaveSystem.Data
             TreeFarm building = TreeFarm.CreateObject(SaveSystemManager.instance.treeFarmPrefab, posistion);
 
             building.InnerStorage = data.InnerStorage;
+            building.Level = data.level;
         }
 
         public void SaveData(BinaryFormatter formatter, FileStream stream, int i)

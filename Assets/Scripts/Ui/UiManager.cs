@@ -2,17 +2,19 @@ using Assets.Scripts.SaveSystem;
 using TMPro;
 using UnityEngine;
 using System.Linq;
-using System.Collections.Generic;
 using Assets.Scripts.Buildings;
 
 public class UiManager : MonoBehaviour
 {
     public GameObject storage;
     public GameObject timer;
+    public GameObject levelUp;
     public Animator animatorStorage;
     public Animator animatorTimer;
+    public Animator animatorLevelUp;
     public TMP_Text innerStorageText;
     public TMP_Text timerText;
+    public TMP_Text levelUpText;
     private static int BuildingId;
 
     public static UiManager instance { get; private set; }
@@ -29,21 +31,25 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    public void OpenInspector(string storageText, int timeLeftText, string type, int instaceId)
+    public void OpenInspector(string storageText, int timeLeftText, int levelText, string type, int instaceId)
     {
         BuildingId = instaceId;
         storage.SetActive(true);
         timer.SetActive(true);
+        levelUp.SetActive(true);
         innerStorageText.text = $"{storageText} {type} \n(Collect)";
         timerText.text = $"{timeLeftText} Seconds";
+        levelUpText.text = $"Upgrade Cost: Free \n Level {levelText}";
         animatorStorage.SetTrigger("pop up");
         animatorTimer.SetTrigger("pop up");
+        animatorLevelUp.SetTrigger("pop up");
     }
 
     public void CloseInspector()
     {
         storage.SetActive(false);
         timer.SetActive(false);
+        levelUp.SetActive(false);
     }
 
     public void UpdateResourceText(string storageText, string type, int instaceId)
@@ -73,6 +79,24 @@ public class UiManager : MonoBehaviour
     {
         if (BuildingId == instaceId)
             timerText.text = $"{timeLeftText} Seconds";
+    }
 
+    public void LevelUpBuidling()
+    {
+        foreach (var item in GameObject.FindGameObjectsWithTag("Building"))
+        {
+            var building = item.GetComponent<IBuilding>();
+            if (building.GetInstanceID() == BuildingId)
+            {
+                building.LevelUp();
+                break;
+            }
+        }
+    }
+
+    internal void UpdateLevelText(int levelText, int instaceId)
+    {
+        if (levelUp.activeSelf && BuildingId == instaceId)
+            levelUpText.text = $"Upgrade Cost: Free \n Level {levelText}";
     }
 }

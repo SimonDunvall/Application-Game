@@ -1061,7 +1061,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: -2719850611512882208, guid: 6713c331647034a078695a7bc397a0a3, type: 3}
-          m_ObjectArgumentAssemblyTypeName: Mine, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: Assets.Scripts.Buildings.Mine, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1844,7 +1844,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 6030956135893712393, guid: 00066f3324dc14f39958f013b2053a7c, type: 3}
-          m_ObjectArgumentAssemblyTypeName: TreeFarm, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: Assets.Scripts.Buildings.TreeFarm, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
