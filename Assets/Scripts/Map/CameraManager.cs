@@ -40,10 +40,18 @@ namespace Assets.Scripts.Map
                 RaycastHit2D[] hits = Physics2D.RaycastAll(rayOrigin, rayDirection);
                 foreach (var hit in hits.Where(hit => hit && hit.collider != null))
                 {
+                    var mine = hit.collider.GetComponent<Mine>();
+                    if (mine != null)
+                    {
+                        UiManager.instance.OpenInspector(mine.InnerStorage.Count().ToString(), (int)mine.TimeLeft, mine.Level, $"{mine.ResourceType} or {mine.SecondResourceType}", mine.GetInstanceID(), true);
+                        break;
+                    }
+
                     var building = hit.collider.GetComponent<IResourceBuilding>();
                     if (building != null)
                     {
-                        UiManager.instance.OpenInspector(building.InnerStorage.ToString(), (int)building.TimeLeft, building.Level, building.ResourceType, building.GetInstanceID());
+                        UiManager.instance.OpenInspector(building.InnerStorage.Count().ToString(), (int)building.TimeLeft, building.Level, building.ResourceType, building.GetInstanceID());
+                        break;
                     }
                 }
             }

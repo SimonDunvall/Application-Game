@@ -10,12 +10,15 @@ public class UiManager : MonoBehaviour
     public GameObject storage;
     public GameObject timer;
     public GameObject levelUp;
+    public GameObject changeResourceType;
     public Animator animatorStorage;
     public Animator animatorTimer;
     public Animator animatorLevelUp;
+    public Animator animatorChangeResourceType;
     public TMP_Text innerStorageText;
     public TMP_Text timerText;
     public TMP_Text levelUpText;
+    public TMP_Text changeResourceTypeText;
     private static int BuildingId;
 
     public static UiManager instance { get; private set; }
@@ -32,7 +35,7 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    public void OpenInspector(string storageText, int timeLeftText, int levelText, string type, int instaceId)
+    public void OpenInspector(string storageText, int timeLeftText, int levelText, string type, int instaceId, bool showChangeResourceType = false)
     {
         BuildingId = instaceId;
         storage.SetActive(true);
@@ -44,6 +47,12 @@ public class UiManager : MonoBehaviour
         animatorStorage.SetTrigger("pop up");
         animatorTimer.SetTrigger("pop up");
         animatorLevelUp.SetTrigger("pop up");
+        if (showChangeResourceType)
+        {
+            changeResourceType.SetActive(true);
+            changeResourceTypeText.text = $"Choosen Resource {type} \n Click to change";
+            animatorChangeResourceType.SetTrigger("pop up");
+        }
 
         Resources.UpdateResources();
     }
@@ -53,6 +62,7 @@ public class UiManager : MonoBehaviour
         storage.SetActive(false);
         timer.SetActive(false);
         levelUp.SetActive(false);
+        changeResourceType.SetActive(false);
     }
 
     public void UpdateResourceText(string storageText, string type, int instaceId)
@@ -81,13 +91,21 @@ public class UiManager : MonoBehaviour
         }
     }
 
+    public void ChangeResourceTypeButton()
+    {
+        var mineDict = SaveSystemManager.mine.ToDictionary(b => b.GetInstanceID(), b => b);
+
+        foreach (var instanceId in mineDict.Keys.Where(id => id == BuildingId))
+        {
+            if (mineDict.TryGetValue(instanceId, out var mine))
+                mine.ChangeResourceType();
+        }
+    }
+
     public void UpdateTimerText(int timeLeftText, int instaceId)
     {
-        if (BuildingId == instaceId)
-        {
+        if (storage.activeSelf && BuildingId == instaceId)
             timerText.text = $"{timeLeftText} Seconds";
-            Resources.UpdateResources();
-        }
     }
 
     public void LevelUpBuidling()
@@ -110,5 +128,11 @@ public class UiManager : MonoBehaviour
             levelUpText.text = $"Upgrade Cost: Free \n Level {levelText}";
             Resources.UpdateResources();
         }
+    }
+
+    internal void UpdateChoosenResource(string choosenResourceType)
+    {
+        if (changeResourceType.activeSelf)
+            changeResourceTypeText.text = $"Choosen Resource {choosenResourceType} \n Click to change";
     }
 }

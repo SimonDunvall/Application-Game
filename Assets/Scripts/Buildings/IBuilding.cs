@@ -4,6 +4,7 @@ namespace Assets.Scripts.Buildings
 {
     public interface IBuilding
     {
+        int InstaceId { get; }
         string Type { get; }
         int Level { get; set; }
 

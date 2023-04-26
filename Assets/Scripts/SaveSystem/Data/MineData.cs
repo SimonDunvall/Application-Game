@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Assets.Scripts.Buildings;
@@ -15,7 +16,7 @@ namespace Assets.Scripts.SaveSystem.Data
         public int level;
         public float[] posistion = new float[3];
 
-        public int InnerStorage;
+        public List<string> InnerStorage = new List<string>();
 
         public MineData(Mine building)
         {

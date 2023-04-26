@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using Assets.Scripts.Buildings;
 using UnityEngine;
@@ -15,7 +17,7 @@ namespace Assets.Scripts.SaveSystem.Data
         public int level;
         public float[] posistion = new float[3];
 
-        public int InnerStorage;
+        public List<string> InnerStorage = new List<string>();
 
         public TreeFarmData(TreeFarm building)
         {

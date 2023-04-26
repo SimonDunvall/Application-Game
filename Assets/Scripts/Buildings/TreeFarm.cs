@@ -9,6 +9,7 @@ namespace Assets.Scripts.Buildings
 {
     public class TreeFarm : MonoBehaviour, IResourceBuilding
     {
+        public int InstaceId => GetInstanceID();
         public string Type => "TreeFarm";
         private int _level = 1;
         public int Level
@@ -25,7 +26,7 @@ namespace Assets.Scripts.Buildings
 
         public int ResourcePerMinute;
         public int InnerStorageSize;
-        public int InnerStorage { get; set; }
+        public List<string> InnerStorage { get; set; } = new List<string>();
         public float TimeLeft { get; set; }
         private float nextIncreaseTime = 60f;
         public string ResourceType => "Wood";
@@ -49,28 +50,33 @@ namespace Assets.Scripts.Buildings
         private void UpdateTimer()
         {
             TimeLeft = nextIncreaseTime - Time.time;
-            UiManager.instance.UpdateTimerText((int)TimeLeft, GetInstanceID());
+            UiManager.instance.UpdateTimerText((int)TimeLeft, InstaceId);
         }
 
         private void UpdateResource()
         {
-            if (TimeLeft <= 0 && InnerStorage < InnerStorageSize)
+            if (TimeLeft <= 0 && InnerStorage.Count() < InnerStorageSize)
             {
                 nextIncreaseTime = Time.time + 60f;
-                InnerStorage += ResourcePerMinute;
-                UiManager.instance.UpdateResourceText(InnerStorage.ToString(), ResourceType, GetInstanceID());
+                InnerStorage.AddRange(Enumerable.Repeat(ResourceType, ResourcePerMinute));
+
+                UiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), ResourceType, InstaceId);
             }
-            if (InnerStorage > InnerStorageSize)
-                InnerStorage = InnerStorageSize;
+            if (InnerStorage.Count() > InnerStorageSize)
+            {
+                int itemsToRemove = InnerStorage.Count() - InnerStorageSize;
+                int startIndex = InnerStorage.Count() - itemsToRemove;
+                InnerStorage.RemoveRange(startIndex, itemsToRemove);
+            }
         }
 
         public void CollectStorage()
         {
-            if (InnerStorage > 0)
+            if (InnerStorage.Count() > 0)
             {
-                SaveSystemManager.resources.wood += InnerStorage;
-                InnerStorage = 0;
-                UiManager.instance.UpdateResourceText(InnerStorage.ToString(), ResourceType, GetInstanceID());
+                SaveSystemManager.resources.wood += InnerStorage.Count();
+                InnerStorage.Clear();
+                UiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), ResourceType, InstaceId);
             }
         }
 
@@ -103,7 +109,7 @@ namespace Assets.Scripts.Buildings
         public void LevelUp()
         {
             Level += 1;
-            UiManager.instance.UpdateLevelText(Level, GetInstanceID());
+            UiManager.instance.UpdateLevelText(Level, InstaceId);
         }
     }
 }

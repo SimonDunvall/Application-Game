@@ -9,6 +9,7 @@ namespace Assets.Scripts.Buildings
 {
     public class TestBuilding : MonoBehaviour, IBuilding
     {
+        public int InstaceId => GetInstanceID();
         public string Type => "testBuilding";
         private int _level = 1;
         public int Level

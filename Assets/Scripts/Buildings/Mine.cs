@@ -9,6 +9,7 @@ namespace Assets.Scripts.Buildings
 {
     public class Mine : MonoBehaviour, IResourceBuilding
     {
+        public int InstaceId => GetInstanceID();
         public string Type => "Mine";
         private int _level = 1;
         public int Level
@@ -25,10 +26,13 @@ namespace Assets.Scripts.Buildings
 
         public int ResourcePerMinute;
         public int InnerStorageSize;
-        public int InnerStorage { get; set; }
+        public List<string> InnerStorage { get; set; } = new List<string>();
         public float TimeLeft { get; set; }
-        private float nextIncreaseTime = 60f;
+        private float nextIncreaseTime = 10f;
         public string ResourceType => "Stone";
+        public string SecondResourceType => "Metal";
+        private string _choosenResourceType = "Stone";
+        public string ChoosenResourceType { get { return _choosenResourceType; } set { _choosenResourceType = value; } }
 
         private void Awake()
         {
@@ -49,29 +53,34 @@ namespace Assets.Scripts.Buildings
         private void UpdateTimer()
         {
             TimeLeft = nextIncreaseTime - Time.time;
-            UiManager.instance.UpdateTimerText((int)TimeLeft, GetInstanceID());
+            UiManager.instance.UpdateTimerText((int)TimeLeft, InstaceId);
         }
 
         private void UpdateResource()
         {
-            if (TimeLeft <= 0 && InnerStorage < InnerStorageSize)
+            if (TimeLeft <= 0 && InnerStorage.Count() < InnerStorageSize)
             {
-                nextIncreaseTime = Time.time + 60f;
-                InnerStorage += ResourcePerMinute;
-                UiManager.instance.UpdateResourceText(InnerStorage.ToString(), ResourceType, GetInstanceID());
+                nextIncreaseTime = Time.time + 10f;
+                InnerStorage.AddRange(Enumerable.Repeat(ChoosenResourceType, ResourcePerMinute));
 
+                UiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), $"{ResourceType} or {SecondResourceType}", InstaceId);
             }
-            if (InnerStorage > InnerStorageSize)
-                InnerStorage = InnerStorageSize;
+            if (InnerStorage.Count() > InnerStorageSize)
+            {
+                int itemsToRemove = InnerStorage.Count() - InnerStorageSize;
+                int startIndex = InnerStorage.Count() - itemsToRemove;
+                InnerStorage.RemoveRange(startIndex, itemsToRemove);
+            }
         }
 
         public void CollectStorage()
         {
-            if (InnerStorage > 0)
+            if (InnerStorage.Count() > 0)
             {
-                SaveSystemManager.resources.stone += InnerStorage;
-                InnerStorage = 0;
-                UiManager.instance.UpdateResourceText(InnerStorage.ToString(), ResourceType, GetInstanceID());
+                SaveSystemManager.resources.stone += InnerStorage.Where(r => r == ResourceType).Count();
+                SaveSystemManager.resources.metal += InnerStorage.Where(r => r == SecondResourceType).Count();
+                InnerStorage.Clear();
+                UiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), $"{ResourceType} or {SecondResourceType}", InstaceId);
             }
         }
 
@@ -104,6 +113,16 @@ namespace Assets.Scripts.Buildings
         public void LevelUp()
         {
             Level += 1;
+        }
+
+        public void ChangeResourceType()
+        {
+            if (ChoosenResourceType == ResourceType)
+                ChoosenResourceType = SecondResourceType;
+            else if (ChoosenResourceType == SecondResourceType)
+                ChoosenResourceType = ResourceType;
+
+            UiManager.instance.UpdateChoosenResource(ChoosenResourceType);
         }
     }
 }
