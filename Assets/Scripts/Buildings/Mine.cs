@@ -24,8 +24,18 @@ namespace Assets.Scripts.Buildings
             }
         }
         public int MaxLevel;
+        public int BaseGoldCost;
+        public int BaseWoodCost;
+        public int BaseStoneCost;
+        public int BaseMetalCost;
+        public int UpgradeGoldCost;
+        public int UpgradeWoodCost;
+        public int UpgradeStoneCost;
+        public int UpgradeMetalCost;
         public int ResourcePerMinute;
         public int InnerStorageSize;
+        public float LevelModifier;
+        public int LevelToUnlockSecondResourceType;
         public List<string> InnerStorage { get; set; } = new List<string>();
         public float TimeLeft { get; set; }
         private float nextIncreaseTime = 10f;
@@ -55,11 +65,11 @@ namespace Assets.Scripts.Buildings
             if (InnerStorage.Count() < InnerStorageSize)
             {
                 TimeLeft = nextIncreaseTime - Time.time;
-                UiManager.instance.UpdateTimerText(InstaceId, false, (int)TimeLeft);
+                MapUiManager.instance.UpdateTimerText(InstaceId, false, (int)TimeLeft);
             }
             else
             {
-                UiManager.instance.UpdateTimerText(InstaceId, true);
+                MapUiManager.instance.UpdateTimerText(InstaceId, true);
             }
         }
 
@@ -68,7 +78,7 @@ namespace Assets.Scripts.Buildings
             if (TimeLeft <= 0 && InnerStorage.Count() < InnerStorageSize)
             {
                 nextIncreaseTime = Time.time + 10f;
-                InnerStorage.AddRange(Enumerable.Repeat(ChoosenResourceType, ResourcePerMinute));
+                InnerStorage.AddRange(Enumerable.Repeat(ChoosenResourceType, ResourcePerMinute).Concat(Enumerable.Repeat(ResourceType, (int)(Level * LevelModifier))));
             }
             if (InnerStorage.Count() > InnerStorageSize)
             {
@@ -76,7 +86,12 @@ namespace Assets.Scripts.Buildings
                 int startIndex = InnerStorage.Count() - itemsToRemove;
                 InnerStorage.RemoveRange(startIndex, itemsToRemove);
             }
-            UiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), $"{ResourceType} or {SecondResourceType}", InstaceId);
+            var resourceTypeText = ResourceType;
+            if (UnlockedMetal())
+            {
+                resourceTypeText = $"{ResourceType} or {SecondResourceType}";
+            }
+            MapUiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), resourceTypeText, InstaceId);
         }
 
         public void CollectStorage()
@@ -90,7 +105,12 @@ namespace Assets.Scripts.Buildings
                     nextIncreaseTime = Time.time + 10f;
                 }
                 InnerStorage.Clear();
-                UiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), $"{ResourceType} or {SecondResourceType}", InstaceId);
+                var resourceTypeText = ResourceType;
+                if (UnlockedMetal())
+                {
+                    resourceTypeText = $"{ResourceType} or {SecondResourceType}";
+                }
+                MapUiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), resourceTypeText, InstaceId);
                 Resources.UpdateResources();
             }
         }
@@ -108,6 +128,8 @@ namespace Assets.Scripts.Buildings
             neighbouringTiles.Add(nearestTile);
             if (neighbouringTiles.Count == 9 && neighbouringTiles.All(tile => !tile.isOccupied))
             {
+                Resources.Pay(GetCost());
+
                 CreateObject(this, nearestTile.transform.position);
 
                 nearestTile.SetCloseTilesOccupied();
@@ -126,7 +148,7 @@ namespace Assets.Scripts.Buildings
             if (Level < MaxLevel)
             {
                 Level += 1;
-                UiManager.instance.UpdateLevelText(this);
+                MapUiManager.instance.UpdateLevelText(this);
             }
         }
 
@@ -137,7 +159,7 @@ namespace Assets.Scripts.Buildings
             else if (ChoosenResourceType == SecondResourceType)
                 ChoosenResourceType = ResourceType;
 
-            UiManager.instance.UpdateChoosenResource(this);
+            MapUiManager.instance.UpdateChoosenResource(this);
         }
 
         public int GetMaxLevel()
@@ -148,6 +170,42 @@ namespace Assets.Scripts.Buildings
         public bool IsMaxLevel()
         {
             if (MaxLevel <= Level)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public Dictionary<string, int> GetCost()
+        {
+            Dictionary<string, int> BuyingCost = new Dictionary<string, int>();
+            BuyingCost.Add("gold", BaseGoldCost);
+            BuyingCost.Add("wood", BaseWoodCost);
+            BuyingCost.Add("stone", BaseStoneCost);
+            BuyingCost.Add("metal", BaseMetalCost);
+
+            return BuyingCost;
+        }
+
+        public Dictionary<string, int> GetUpgradeCost()
+        {
+            Dictionary<string, int> BuyingCost = new Dictionary<string, int>();
+            BuyingCost.Add("gold", (int)(UpgradeGoldCost + (Level * LevelModifier * 1.5)));
+            BuyingCost.Add("wood", (int)(UpgradeWoodCost + (Level * LevelModifier * 1.5)));
+            if (Level > 2)
+                BuyingCost.Add("stone", (int)(UpgradeStoneCost + (Level * LevelModifier * 1.5)));
+            if (Level > 4 && UnlockedMetal())
+                BuyingCost.Add("metal", (int)(UpgradeMetalCost + (Level * LevelModifier * 1.5)));
+
+            return BuyingCost;
+        }
+
+        public bool UnlockedMetal()
+        {
+            if (Level >= LevelToUnlockSecondResourceType)
             {
                 return true;
             }

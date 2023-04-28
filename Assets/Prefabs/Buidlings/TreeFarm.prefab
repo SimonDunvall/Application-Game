@@ -98,9 +98,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96869362275984abb882ccfa707a6f0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxLevel: 3
+  MaxLevel: 5
+  BaseGoldCost: 200
+  BaseWoodCost: 0
+  BaseStoneCost: 0
+  BaseMetalCost: 0
+  UpgradeGoldCost: 150
+  UpgradeWoodCost: 40
+  UpgradeStoneCost: 20
+  UpgradeMetalCost: 15
   ResourcePerMinute: 2
-  InnerStorageSize: 10
+  InnerStorageSize: 50
+  LevelModifier: 1.75
 --- !u!61 &2597442141284679955
 BoxCollider2D:
   m_ObjectHideFlags: 0

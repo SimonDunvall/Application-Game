@@ -2,10 +2,12 @@ using Assets.Scripts.SaveSystem;
 using TMPro;
 using System.Linq;
 using Assets.Scripts.Buildings;
-using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine;
+using Resources = Assets.Scripts.Resources;
+using System.Collections.Generic;
 
-public class UiManager : MonoBehaviour
+public class MapUiManager : MonoBehaviour
 {
     public GameObject storage;
     public GameObject timer;
@@ -21,7 +23,7 @@ public class UiManager : MonoBehaviour
     public TMP_Text changeResourceTypeText;
     private static int BuildingId;
 
-    public static UiManager instance { get; private set; }
+    public static MapUiManager instance { get; private set; }
 
     private void Awake()
     {
@@ -77,7 +79,7 @@ public class UiManager : MonoBehaviour
 
     public void UpdateResourceText(string storageText, string type, int instaceId)
     {
-        if (storage.activeSelf && BuildingId == instaceId)
+        if (storage && storage.activeSelf && BuildingId == instaceId)
         {
             innerStorageText.text = $"{storageText} {type} \n(Collect)";
         }
@@ -140,12 +142,31 @@ public class UiManager : MonoBehaviour
     {
         if (levelUp.activeSelf && BuildingId == building.GetInstanceID())
         {
-            levelUpText.text = building.IsMaxLevel() ? $"Max Level \n Level {building.Level}" : $"Upgrade Cost: Free \n Level {building.Level}";
+            string result = "";
+            foreach (KeyValuePair<string, int> pair in building.GetUpgradeCost())
+            {
+                if (pair.Value != 0)
+                {
+                    result += pair.Key + ": " + pair.Value.ToString() + ", ";
+                }
+            }
+            if (result.Length > 0)
+            {
+                result = result.Substring(0, result.Length - 2);
+            }
+            else
+            {
+                result = "Free";
+            }
+
+
+            levelUpText.text = building.IsMaxLevel() ? $"Max Level \n Level {building.Level}" : $"Upgrade Cost: {result} \n Level {building.Level}";
 
             Button buttonComponent = levelUp.GetComponent<Button>();
             if (buttonComponent != null)
             {
                 buttonComponent.interactable = !building.IsMaxLevel();
+                buttonComponent.interactable = Resources.CanPay(building.GetUpgradeCost());
             }
         }
     }

@@ -43,21 +43,27 @@ namespace Assets.Scripts.Map
                     var mine = hit.collider.GetComponent<Mine>();
                     if (mine != null)
                     {
-                        UiManager.instance.OpenInspector(mine, true, mine.InnerStorage.Count().ToString(), (int)mine.TimeLeft, $"{mine.ResourceType} or {mine.SecondResourceType}", true);
+                        var resourceTypeText = mine.ResourceType;
+                        if (mine.UnlockedMetal())
+                        {
+                            resourceTypeText = $"{mine.ResourceType} or {mine.SecondResourceType}";
+                        }
+
+                        MapUiManager.instance.OpenInspector(mine, true, mine.InnerStorage.Count().ToString(), (int)mine.TimeLeft, resourceTypeText, mine.UnlockedMetal());
                         break;
                     }
 
                     var resourceBuilding = hit.collider.GetComponent<IResourceBuilding>();
                     if (resourceBuilding != null)
                     {
-                        UiManager.instance.OpenInspector(resourceBuilding, true, resourceBuilding.InnerStorage.Count().ToString(), (int)resourceBuilding.TimeLeft, resourceBuilding.ResourceType);
+                        MapUiManager.instance.OpenInspector(resourceBuilding, true, resourceBuilding.InnerStorage.Count().ToString(), (int)resourceBuilding.TimeLeft, resourceBuilding.ResourceType);
                         break;
                     }
 
                     var building = hit.collider.GetComponent<IBuilding>();
                     if (building != null)
                     {
-                        UiManager.instance.OpenInspector(building);
+                        MapUiManager.instance.OpenInspector(building);
                         break;
                     }
                 }

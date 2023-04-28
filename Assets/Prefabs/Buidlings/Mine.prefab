@@ -99,8 +99,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxLevel: 5
-  ResourcePerMinute: 3
-  InnerStorageSize: 6
+  BaseGoldCost: 500
+  BaseWoodCost: 100
+  BaseStoneCost: 0
+  BaseMetalCost: 0
+  UpgradeGoldCost: 0
+  UpgradeWoodCost: 0
+  UpgradeStoneCost: 0
+  UpgradeMetalCost: 0
+  ResourcePerMinute: 1
+  InnerStorageSize: 7
+  LevelModifier: 2.2
+  LevelToUnlockSecondResourceType: 5
 --- !u!61 &404105865010956761
 BoxCollider2D:
   m_ObjectHideFlags: 0

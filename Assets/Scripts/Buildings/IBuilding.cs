@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Buildings
@@ -14,5 +15,6 @@ namespace Assets.Scripts.Buildings
         int GetInstanceID();
         int GetMaxLevel();
         bool IsMaxLevel();
+        Dictionary<string, int> GetUpgradeCost();
     }
 }

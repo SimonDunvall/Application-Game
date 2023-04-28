@@ -99,6 +99,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxLevel: 3
+  BaseGoldCost: 0
+  BaseWoodCost: 0
+  BaseStoneCost: 0
+  BaseMetalCost: 0
 --- !u!61 &2422767833115173454
 BoxCollider2D:
   m_ObjectHideFlags: 0

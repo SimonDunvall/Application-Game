@@ -24,6 +24,15 @@ namespace Assets.Scripts.Buildings
             }
         }
         public int MaxLevel;
+        public int BaseGoldCost;
+        public int BaseWoodCost;
+        public int BaseStoneCost;
+        public int BaseMetalCost;
+        public int UpgradeGoldCost;
+        public int UpgradeWoodCost;
+        public int UpgradeStoneCost;
+        public int UpgradeMetalCost;
+        public float LevelModifier;
 
         private void Awake()
         {
@@ -45,8 +54,9 @@ namespace Assets.Scripts.Buildings
             neighbouringTiles.Add(nearestTile);
             if (neighbouringTiles.Count == 9 && neighbouringTiles.All(tile => !tile.isOccupied))
             {
-                CreateObject(this, nearestTile.transform.position);
+                Resources.Pay(GetCost());
 
+                CreateObject(this, nearestTile.transform.position);
                 nearestTile.SetCloseTilesOccupied();
 
                 customCursor.DisableCursor();
@@ -69,7 +79,7 @@ namespace Assets.Scripts.Buildings
             if (Level < MaxLevel)
             {
                 Level += 1;
-                UiManager.instance.UpdateLevelText(this);
+                MapUiManager.instance.UpdateLevelText(this);
             }
         }
 
@@ -88,6 +98,30 @@ namespace Assets.Scripts.Buildings
             {
                 return false;
             }
+        }
+
+        public Dictionary<string, int> GetCost()
+        {
+            Dictionary<string, int> BuyingCost = new Dictionary<string, int>();
+            BuyingCost.Add("gold", BaseGoldCost);
+            BuyingCost.Add("wood", BaseWoodCost);
+            BuyingCost.Add("stone", BaseStoneCost);
+            BuyingCost.Add("metal", BaseMetalCost);
+
+            return BuyingCost;
+        }
+
+        public Dictionary<string, int> GetUpgradeCost()
+        {
+            Dictionary<string, int> BuyingCost = new Dictionary<string, int>();
+            BuyingCost.Add("gold", (int)(UpgradeGoldCost + (Level * LevelModifier * 1.5)));
+            BuyingCost.Add("wood", (int)(UpgradeWoodCost + (Level * LevelModifier * 1.5)));
+            if (Level > 1)
+                BuyingCost.Add("stone", (int)(UpgradeStoneCost + (Level * LevelModifier * 1.5)));
+            if (Level > 3)
+                BuyingCost.Add("metal", (int)(UpgradeMetalCost + (Level * LevelModifier * 1.5)));
+
+            return BuyingCost;
         }
     }
 }

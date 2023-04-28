@@ -45780,7 +45780,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1337665875}
-        m_TargetAssemblyTypeName: UiManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: MapUiManager, Assembly-CSharp
         m_MethodName: CollectResource
         m_Mode: 1
         m_Arguments:
@@ -60589,7 +60589,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1337665872}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10480b2d042c241fba4b94bbbfd4fbc5, type: 3}
+  m_Script: {fileID: 11500000, guid: 1ca8b46e1969546e7b3572540e4ab622, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   storage: {fileID: 965194214}

@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 55817867}
   - component: {fileID: 55817866}
+  - component: {fileID: 55817868}
   m_Layer: 0
   m_Name: ShopManager
   m_TagString: Untagged
@@ -168,6 +169,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &55817868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 55817865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a1837ed613c1424a8aa0fbca17d7225, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TestBuildingButton: {fileID: 1878325323}
+  TestBuilding: {fileID: -8333805196302294762, guid: fb6cbf3d571774e879aae3fe90dd57fb, type: 3}
+  MineButton: {fileID: 651818019}
+  Mine: {fileID: -2719850611512882208, guid: 6713c331647034a078695a7bc397a0a3, type: 3}
+  TreeFarmButton: {fileID: 1271978368}
+  TreeFarm: {fileID: 6030956135893712393, guid: 00066f3324dc14f39958f013b2053a7c, type: 3}
 --- !u!1 &78779425
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,7 +245,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Cost FREE
+  m_text: Cost 200 Gold
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
@@ -2602,7 +2621,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Cost FREE
+  m_text: "Cost 500 Gold \n100 Wood"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
@@ -2629,10 +2648,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 64
+  m_fontSize: 54
   m_fontSizeBase: 64
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 54
   m_fontSizeMax: 72
   m_fontStyle: 0

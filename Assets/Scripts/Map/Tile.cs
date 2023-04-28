@@ -19,7 +19,7 @@ namespace Assets.Scripts.Map
         private void OnMouseDown()
         {
             if (!EventSystem.current.IsPointerOverGameObject())
-                UiManager.instance.CloseInspector();
+                MapUiManager.instance.CloseInspector();
         }
 
         internal static Tile FindTile(Vector3 posistion)

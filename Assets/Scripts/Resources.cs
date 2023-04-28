@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Assets.Scripts.Managers;
 using Assets.Scripts.SaveSystem;
 using Assets.Scripts.SaveSystem.Data;
@@ -17,6 +19,59 @@ namespace Assets.Scripts
             GameManager.instance.woodDisplay.text = SaveSystemManager.resources.wood.ToString();
             GameManager.instance.stoneDisplay.text = SaveSystemManager.resources.stone.ToString();
             GameManager.instance.MetalDisplay.text = SaveSystemManager.resources.metal.ToString();
+        }
+
+        internal static bool CanPay(Dictionary<string, int> cost)
+        {
+            Pay(cost);
+
+            if (SaveSystemManager.resources.gold < 0 || SaveSystemManager.resources.wood < 0 || SaveSystemManager.resources.stone < 0 || SaveSystemManager.resources.metal < 0)
+            {
+                UndoPayMent(cost);
+                return false;
+            }
+            else
+            {
+                UndoPayMent(cost);
+                return true;
+            }
+        }
+
+        private static void UndoPayMent(Dictionary<string, int> cost)
+        {
+            SaveSystemManager.resources.gold += cost["gold"];
+            if (cost.ContainsKey("wood"))
+            {
+                SaveSystemManager.resources.wood += cost["wood"];
+            }
+            if (cost.ContainsKey("stone"))
+            {
+                SaveSystemManager.resources.stone += cost["stone"];
+            }
+            if (cost.ContainsKey("metal"))
+            {
+                SaveSystemManager.resources.metal += cost["metal"];
+            }
+
+
+        }
+
+        internal static void Pay(Dictionary<string, int> cost)
+        {
+            SaveSystemManager.resources.gold -= cost["gold"];
+            if (cost.ContainsKey("wood"))
+            {
+                SaveSystemManager.resources.wood -= cost["wood"];
+            }
+            if (cost.ContainsKey("stone"))
+            {
+                SaveSystemManager.resources.stone -= cost["stone"];
+            }
+            if (cost.ContainsKey("metal"))
+            {
+                SaveSystemManager.resources.metal -= cost["metal"];
+            }
+
         }
 
         public static implicit operator Resources(ResourcesData r)
