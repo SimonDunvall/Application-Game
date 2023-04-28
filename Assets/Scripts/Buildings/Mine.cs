@@ -52,8 +52,15 @@ namespace Assets.Scripts.Buildings
 
         private void UpdateTimer()
         {
-            TimeLeft = nextIncreaseTime - Time.time;
-            UiManager.instance.UpdateTimerText((int)TimeLeft, InstaceId);
+            if (InnerStorage.Count() < InnerStorageSize)
+            {
+                TimeLeft = nextIncreaseTime - Time.time;
+                UiManager.instance.UpdateTimerText(InstaceId, false, (int)TimeLeft);
+            }
+            else
+            {
+                UiManager.instance.UpdateTimerText(InstaceId, true);
+            }
         }
 
         private void UpdateResource()
@@ -79,8 +86,13 @@ namespace Assets.Scripts.Buildings
             {
                 SaveSystemManager.resources.stone += InnerStorage.Where(r => r == ResourceType).Count();
                 SaveSystemManager.resources.metal += InnerStorage.Where(r => r == SecondResourceType).Count();
+                if (InnerStorage.Count() >= InnerStorageSize)
+                {
+                    nextIncreaseTime = Time.time + 10f;
+                }
                 InnerStorage.Clear();
                 UiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), $"{ResourceType} or {SecondResourceType}", InstaceId);
+                Resources.UpdateResources();
             }
         }
 
@@ -117,7 +129,6 @@ namespace Assets.Scripts.Buildings
                 Level += 1;
                 UiManager.instance.UpdateLevelText(this);
             }
-            Debug.Log(Level);
         }
 
         public void ChangeResourceType()

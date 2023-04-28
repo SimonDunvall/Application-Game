@@ -3,7 +3,7 @@ using TMPro;
 using System.Linq;
 using Assets.Scripts.Buildings;
 using UnityEngine;
-using Resources = Assets.Scripts.Resources;
+using UnityEngine.UI;
 
 public class UiManager : MonoBehaviour
 {
@@ -46,7 +46,7 @@ public class UiManager : MonoBehaviour
             storage.SetActive(true);
             timer.SetActive(true);
             UpdateResourceText(storageAmount, resourceTypeText, BuildingId);
-            UpdateTimerText(timeLeft, BuildingId);
+            UpdateTimerText(BuildingId, false, timeLeft);
             animatorStorage.SetTrigger("pop up");
             animatorTimer.SetTrigger("pop up");
             if (showChangeResourceType)
@@ -55,9 +55,17 @@ public class UiManager : MonoBehaviour
                 UpdateChoosenResource(resourceTypeText);
                 animatorChangeResourceType.SetTrigger("pop up");
             }
+            else
+            {
+                changeResourceType.SetActive(false);
+            }
         }
-
-        Resources.UpdateResources();
+        else
+        {
+            storage.SetActive(false);
+            timer.SetActive(false);
+            changeResourceType.SetActive(false);
+        }
     }
 
     public void CloseInspector()
@@ -73,7 +81,6 @@ public class UiManager : MonoBehaviour
         if (storage.activeSelf && BuildingId == instaceId)
         {
             innerStorageText.text = $"{storageText} {type} \n(Collect)";
-            Resources.UpdateResources();
         }
     }
 
@@ -105,10 +112,16 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    public void UpdateTimerText(int timeLeftText, int instaceId)
+    public void UpdateTimerText(int instaceId, bool storageIsFull, int timeLeftText = 0)
     {
-        if (timer && timer.activeSelf && BuildingId == instaceId)
+        if (timer && timer.activeSelf && BuildingId == instaceId && storageIsFull == false)
+        {
             timerText.text = $"{timeLeftText} Seconds";
+        }
+        else if (timer && timer.activeSelf && BuildingId == instaceId)
+        {
+            timerText.text = "Storage Is Full";
+        }
     }
 
     public void LevelUpBuidling()
@@ -128,15 +141,13 @@ public class UiManager : MonoBehaviour
     {
         if (levelUp.activeSelf && BuildingId == building.GetInstanceID())
         {
-            if (building.IsMaxLevel())
+            levelUpText.text = building.IsMaxLevel() ? $"Max Level \n Level {building.Level}" : $"Upgrade Cost: Free \n Level {building.Level}";
+
+            Button buttonComponent = levelUp.GetComponent<Button>();
+            if (buttonComponent != null)
             {
-                levelUpText.text = $"Max Level \n Level {building.Level}";
+                buttonComponent.interactable = !building.IsMaxLevel();
             }
-            else
-            {
-                levelUpText.text = $"Upgrade Cost: Free \n Level {building.Level}";
-            }
-            Resources.UpdateResources();
         }
     }
 

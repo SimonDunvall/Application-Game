@@ -49,8 +49,15 @@ namespace Assets.Scripts.Buildings
 
         private void UpdateTimer()
         {
-            TimeLeft = nextIncreaseTime - Time.time;
-            UiManager.instance.UpdateTimerText((int)TimeLeft, InstaceId);
+            if (InnerStorage.Count() < InnerStorageSize)
+            {
+                TimeLeft = nextIncreaseTime - Time.time;
+                UiManager.instance.UpdateTimerText(InstaceId, false, (int)TimeLeft);
+            }
+            else
+            {
+                UiManager.instance.UpdateTimerText(InstaceId, true);
+            }
         }
 
         private void UpdateResource()
@@ -75,8 +82,13 @@ namespace Assets.Scripts.Buildings
             if (InnerStorage.Count() > 0)
             {
                 SaveSystemManager.resources.wood += InnerStorage.Count();
+                if (InnerStorage.Count() >= InnerStorageSize)
+                {
+                    nextIncreaseTime = Time.time + 10f;
+                }
                 InnerStorage.Clear();
                 UiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), ResourceType, InstaceId);
+                Resources.UpdateResources();
             }
         }
 
