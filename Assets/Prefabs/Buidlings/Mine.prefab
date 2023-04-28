@@ -99,8 +99,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxLevel: 5
-  ResourcePerMinute: 1
-  InnerStorageSize: 10
+  ResourcePerMinute: 3
+  InnerStorageSize: 6
 --- !u!61 &404105865010956761
 BoxCollider2D:
   m_ObjectHideFlags: 0

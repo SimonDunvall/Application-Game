@@ -32,6 +32,7 @@ namespace Assets.Scripts.Managers
         private void Start()
         {
             buildingToPlace = StaticClass.GetBoughtBuilding();
+            Resources.UpdateResources();
         }
 
         private void Update()

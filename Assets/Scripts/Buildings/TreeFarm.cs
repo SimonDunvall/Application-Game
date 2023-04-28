@@ -66,8 +66,6 @@ namespace Assets.Scripts.Buildings
             {
                 nextIncreaseTime = Time.time + 60f;
                 InnerStorage.AddRange(Enumerable.Repeat(ResourceType, ResourcePerMinute));
-
-                UiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), ResourceType, InstaceId);
             }
             if (InnerStorage.Count() > InnerStorageSize)
             {
@@ -75,6 +73,7 @@ namespace Assets.Scripts.Buildings
                 int startIndex = InnerStorage.Count() - itemsToRemove;
                 InnerStorage.RemoveRange(startIndex, itemsToRemove);
             }
+            UiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), ResourceType, InstaceId);
         }
 
         public void CollectStorage()

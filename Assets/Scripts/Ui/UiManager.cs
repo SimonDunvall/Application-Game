@@ -41,6 +41,7 @@ public class UiManager : MonoBehaviour
         levelUp.SetActive(true);
         UpdateLevelText(building);
         animatorLevelUp.SetTrigger("pop up");
+
         if (isResourceBuilding)
         {
             storage.SetActive(true);
@@ -49,15 +50,12 @@ public class UiManager : MonoBehaviour
             UpdateTimerText(BuildingId, false, timeLeft);
             animatorStorage.SetTrigger("pop up");
             animatorTimer.SetTrigger("pop up");
+
+            changeResourceType.SetActive(showChangeResourceType);
             if (showChangeResourceType)
             {
-                changeResourceType.SetActive(true);
-                UpdateChoosenResource(resourceTypeText);
+                UpdateChoosenResource((Mine)building);
                 animatorChangeResourceType.SetTrigger("pop up");
-            }
-            else
-            {
-                changeResourceType.SetActive(false);
             }
         }
         else
@@ -67,6 +65,7 @@ public class UiManager : MonoBehaviour
             changeResourceType.SetActive(false);
         }
     }
+
 
     public void CloseInspector()
     {
@@ -151,9 +150,9 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    internal void UpdateChoosenResource(string choosenResourceType)
+    internal void UpdateChoosenResource(Mine mine)
     {
         if (changeResourceType.activeSelf)
-            changeResourceTypeText.text = $"Choosen Resource {choosenResourceType} \n Click to change";
+            changeResourceTypeText.text = $"Choosen Resource {mine.ChoosenResourceType} \n Click to change";
     }
 }

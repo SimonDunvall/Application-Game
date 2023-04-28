@@ -69,8 +69,6 @@ namespace Assets.Scripts.Buildings
             {
                 nextIncreaseTime = Time.time + 10f;
                 InnerStorage.AddRange(Enumerable.Repeat(ChoosenResourceType, ResourcePerMinute));
-
-                UiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), $"{ResourceType} or {SecondResourceType}", InstaceId);
             }
             if (InnerStorage.Count() > InnerStorageSize)
             {
@@ -78,6 +76,7 @@ namespace Assets.Scripts.Buildings
                 int startIndex = InnerStorage.Count() - itemsToRemove;
                 InnerStorage.RemoveRange(startIndex, itemsToRemove);
             }
+            UiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), $"{ResourceType} or {SecondResourceType}", InstaceId);
         }
 
         public void CollectStorage()
@@ -138,7 +137,7 @@ namespace Assets.Scripts.Buildings
             else if (ChoosenResourceType == SecondResourceType)
                 ChoosenResourceType = ResourceType;
 
-            UiManager.instance.UpdateChoosenResource(ChoosenResourceType);
+            UiManager.instance.UpdateChoosenResource(this);
         }
 
         public int GetMaxLevel()
