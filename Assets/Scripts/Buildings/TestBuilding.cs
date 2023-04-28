@@ -23,6 +23,7 @@ namespace Assets.Scripts.Buildings
                 _level = value;
             }
         }
+        public int MaxLevel;
 
         private void Awake()
         {
@@ -65,7 +66,28 @@ namespace Assets.Scripts.Buildings
 
         public void LevelUp()
         {
-            Level += 1;
+            if (Level < MaxLevel)
+            {
+                Level += 1;
+                UiManager.instance.UpdateLevelText(this);
+            }
+        }
+
+        public int GetMaxLevel()
+        {
+            return MaxLevel;
+        }
+
+        public bool IsMaxLevel()
+        {
+            if (MaxLevel <= Level)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

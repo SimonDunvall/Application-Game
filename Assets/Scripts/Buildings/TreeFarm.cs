@@ -23,7 +23,7 @@ namespace Assets.Scripts.Buildings
                 _level = value;
             }
         }
-
+        public int MaxLevel;
         public int ResourcePerMinute;
         public int InnerStorageSize;
         public List<string> InnerStorage { get; set; } = new List<string>();
@@ -108,8 +108,28 @@ namespace Assets.Scripts.Buildings
 
         public void LevelUp()
         {
-            Level += 1;
-            UiManager.instance.UpdateLevelText(Level, InstaceId);
+            if (Level < MaxLevel)
+            {
+                Level += 1;
+                UiManager.instance.UpdateLevelText(this);
+            }
+        }
+
+        public int GetMaxLevel()
+        {
+            return MaxLevel;
+        }
+
+        public bool IsMaxLevel()
+        {
+            if (MaxLevel <= Level)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

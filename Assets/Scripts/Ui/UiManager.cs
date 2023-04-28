@@ -35,23 +35,26 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    public void OpenInspector(string storageText, int timeLeftText, int levelText, string type, int instaceId, bool showChangeResourceType = false)
+    public void OpenInspector(IBuilding building, bool isResourceBuilding = false, string storageAmount = "", int timeLeft = 0, string resourceTypeText = "", bool showChangeResourceType = false)
     {
-        BuildingId = instaceId;
-        storage.SetActive(true);
-        timer.SetActive(true);
+        BuildingId = building.GetInstanceID();
         levelUp.SetActive(true);
-        innerStorageText.text = $"{storageText} {type} \n(Collect)";
-        timerText.text = $"{timeLeftText} Seconds";
-        levelUpText.text = $"Upgrade Cost: Free \n Level {levelText}";
-        animatorStorage.SetTrigger("pop up");
-        animatorTimer.SetTrigger("pop up");
+        UpdateLevelText(building);
         animatorLevelUp.SetTrigger("pop up");
-        if (showChangeResourceType)
+        if (isResourceBuilding)
         {
-            changeResourceType.SetActive(true);
-            changeResourceTypeText.text = $"Choosen Resource {type} \n Click to change";
-            animatorChangeResourceType.SetTrigger("pop up");
+            storage.SetActive(true);
+            timer.SetActive(true);
+            UpdateResourceText(storageAmount, resourceTypeText, BuildingId);
+            UpdateTimerText(timeLeft, BuildingId);
+            animatorStorage.SetTrigger("pop up");
+            animatorTimer.SetTrigger("pop up");
+            if (showChangeResourceType)
+            {
+                changeResourceType.SetActive(true);
+                UpdateChoosenResource(resourceTypeText);
+                animatorChangeResourceType.SetTrigger("pop up");
+            }
         }
 
         Resources.UpdateResources();
@@ -104,7 +107,7 @@ public class UiManager : MonoBehaviour
 
     public void UpdateTimerText(int timeLeftText, int instaceId)
     {
-        if (storage.activeSelf && BuildingId == instaceId)
+        if (timer && timer.activeSelf && BuildingId == instaceId)
             timerText.text = $"{timeLeftText} Seconds";
     }
 
@@ -113,7 +116,7 @@ public class UiManager : MonoBehaviour
         foreach (var item in GameObject.FindGameObjectsWithTag("Building"))
         {
             var building = item.GetComponent<IBuilding>();
-            if (building.GetInstanceID() == BuildingId)
+            if (building.GetInstanceID() == BuildingId && building.Level < building.GetMaxLevel())
             {
                 building.LevelUp();
                 break;
@@ -121,11 +124,18 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    internal void UpdateLevelText(int levelText, int instaceId)
+    internal void UpdateLevelText(IBuilding building)
     {
-        if (levelUp.activeSelf && BuildingId == instaceId)
+        if (levelUp.activeSelf && BuildingId == building.GetInstanceID())
         {
-            levelUpText.text = $"Upgrade Cost: Free \n Level {levelText}";
+            if (building.IsMaxLevel())
+            {
+                levelUpText.text = $"Max Level \n Level {building.Level}";
+            }
+            else
+            {
+                levelUpText.text = $"Upgrade Cost: Free \n Level {building.Level}";
+            }
             Resources.UpdateResources();
         }
     }

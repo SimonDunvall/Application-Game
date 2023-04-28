@@ -12,5 +12,7 @@ namespace Assets.Scripts.Buildings
         void PlaceBuilding();
         void LevelUp();
         int GetInstanceID();
+        int GetMaxLevel();
+        bool IsMaxLevel();
     }
 }

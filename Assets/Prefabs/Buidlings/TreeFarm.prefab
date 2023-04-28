@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96869362275984abb882ccfa707a6f0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaxLevel: 3
   ResourcePerMinute: 2
   InnerStorageSize: 10
 --- !u!61 &2597442141284679955
