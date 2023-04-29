@@ -116,6 +116,7 @@ namespace Assets.Scripts.Buildings
             if (neighbouringTiles.Count == 9 && neighbouringTiles.All(tile => !tile.isOccupied))
             {
                 Resources.Pay(GetCost());
+                Resources.UpdateResources();
 
                 CreateObject(this, nearestTile.transform.position);
 
@@ -134,8 +135,10 @@ namespace Assets.Scripts.Buildings
         {
             if (Level < MaxLevel)
             {
+                Resources.Pay(GetUpgradeCost());
+                Resources.UpdateResources();
                 Level += 1;
-                MapUiManager.instance.UpdateLevelText(this);
+                MapUiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), ResourceType, InstaceId);
             }
         }
 
@@ -171,7 +174,7 @@ namespace Assets.Scripts.Buildings
         {
             Dictionary<string, int> BuyingCost = new Dictionary<string, int>();
             BuyingCost.Add("gold", (int)(UpgradeGoldCost + (Level * LevelModifier * 1.5)));
-            if (Level > 1)
+            if (Level > 2)
                 BuyingCost.Add("wood", (int)(UpgradeWoodCost + (Level * LevelModifier * 1.5)));
             if (Level > 3)
                 BuyingCost.Add("stone", (int)(UpgradeStoneCost + (Level * LevelModifier * 1.5)));

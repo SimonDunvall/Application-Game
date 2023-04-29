@@ -39,7 +39,10 @@ namespace Assets.Scripts
 
         private static void UndoPayMent(Dictionary<string, int> cost)
         {
-            SaveSystemManager.resources.gold += cost["gold"];
+            if (cost.ContainsKey("gold"))
+            {
+                SaveSystemManager.resources.gold += cost["gold"];
+            }
             if (cost.ContainsKey("wood"))
             {
                 SaveSystemManager.resources.wood += cost["wood"];
@@ -58,7 +61,10 @@ namespace Assets.Scripts
 
         internal static void Pay(Dictionary<string, int> cost)
         {
-            SaveSystemManager.resources.gold -= cost["gold"];
+            if (cost.ContainsKey("gold"))
+            {
+                SaveSystemManager.resources.gold -= cost["gold"];
+            }
             if (cost.ContainsKey("wood"))
             {
                 SaveSystemManager.resources.wood -= cost["wood"];

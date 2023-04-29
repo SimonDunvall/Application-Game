@@ -3,14 +3,14 @@ using System.Linq;
 using Assets.Scripts.Map;
 using Assets.Scripts.SaveSystem;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using Random = System.Random;
 
 namespace Assets.Scripts.Buildings
 {
     public class Home : MonoBehaviour, IBuilding
     {
         public int InstaceId => GetInstanceID();
-        public string Type => "testBuilding";
+        public string Type => "home";
         private int _level = 1;
         public int Level
         {
@@ -28,9 +28,11 @@ namespace Assets.Scripts.Buildings
         public int UpgradeWoodCost;
         public int UpgradeStoneCost;
         public int UpgradeMetalCost;
+        public int GoldPerWood;
+        public int GoldPerStone;
+        public int GoldPerMetal;
+        public Dictionary<string, (int, int)> GoldPerResources { get; set; } = new Dictionary<string, (int, int)>();
         public float LevelModifier;
-
-        static bool hasLoadedSave = false;
 
         public static Home instance { get; private set; }
 
@@ -44,23 +46,18 @@ namespace Assets.Scripts.Buildings
             {
                 instance = this;
             }
-            SceneManager.sceneLoaded += OnSceneLoaded;
+            if (SaveSystemManager.home.Count() == 0)
+                SaveSystemManager.home.Add(this);
         }
 
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        private void Start()
         {
-            if (!hasLoadedSave)
-            {
-                hasLoadedSave = true;
-                SetTilesToOccupied();
-                SaveSystemManager.home.Add(this);
-            }
+            SetTilesToOccupied();
         }
 
         private void SetTilesToOccupied()
         {
             Tile nearestTile = Tile.GetNearestTile(new Vector3((float)-0.5, (float)-0.5, 0));
-
             if (!nearestTile.isOccupied)
             {
                 List<Tile> neighbouringTiles = nearestTile.FindAllTileNeighbors(true);
@@ -87,8 +84,9 @@ namespace Assets.Scripts.Buildings
         {
             if (Level < MaxLevel)
             {
+                Resources.Pay(GetUpgradeCost());
+                Resources.UpdateResources();
                 Level += 1;
-                MapUiManager.instance.UpdateLevelText(this);
             }
         }
 
@@ -125,6 +123,63 @@ namespace Assets.Scripts.Buildings
         public void PlaceBuilding()
         {
             throw new System.NotImplementedException();
+        }
+
+        internal Dictionary<string, (int, int)> GetTradeConverstion()
+        {
+            Random rnd = new Random();
+            Dictionary<string, (int, int)> goldPerResource = new Dictionary<string, (int, int)>()
+            {
+                { "wood", ((int)(GoldPerWood + (LevelModifier * rnd.Next((int)(LevelModifier * Level)))), rnd.Next(1000)) },
+                { "stone", ((int)(GoldPerStone + (LevelModifier * rnd.Next((int)(LevelModifier * Level + Level)))) ,rnd.Next(1000)) },
+                { "metal", ((int)(GoldPerMetal + Level + (LevelModifier * rnd.Next((int)(LevelModifier * Level)))), rnd.Next(1000)) }
+            };
+
+            GoldPerResources = goldPerResource;
+            return goldPerResource;
+        }
+
+        public void SellWood()
+        {
+            var tradeInfo = Home.instance.GoldPerResources["wood"];
+            var price = new Dictionary<string, int>() { { "wood", tradeInfo.Item2 } };
+            if (Resources.CanPay(price))
+            {
+                Resources.Pay(price);
+                SaveSystemManager.resources.gold += tradeInfo.Item1 * tradeInfo.Item2;
+                Resources.UpdateResources();
+
+                MapUiManager.instance.OpenInspector(Home.instance);
+            }
+        }
+
+
+        public void SellStone()
+        {
+            var tradeInfo = Home.instance.GoldPerResources["stone"];
+            var price = new Dictionary<string, int>() { { "stone", tradeInfo.Item2 } };
+            if (Resources.CanPay(price))
+            {
+                Resources.Pay(price);
+                SaveSystemManager.resources.gold += tradeInfo.Item1 * tradeInfo.Item2;
+                Resources.UpdateResources();
+
+                MapUiManager.instance.OpenInspector(Home.instance);
+            }
+        }
+
+        public void SellMetal()
+        {
+            var tradeInfo = Home.instance.GoldPerResources["metal"];
+            var price = new Dictionary<string, int>() { { "metal", tradeInfo.Item2 } };
+            if (Resources.CanPay(price))
+            {
+                Resources.Pay(price);
+                SaveSystemManager.resources.gold += tradeInfo.Item1 * tradeInfo.Item2;
+                Resources.UpdateResources();
+
+                MapUiManager.instance.OpenInspector(Home.instance);
+            }
         }
     }
 }

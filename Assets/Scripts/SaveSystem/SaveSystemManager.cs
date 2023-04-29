@@ -5,7 +5,6 @@ using Assets.Scripts.Map;
 using System.Linq;
 using Assets.Scripts.SaveSystem.Data;
 using UnityEngine.SceneManagement;
-using System;
 
 namespace Assets.Scripts.SaveSystem
 {

@@ -27,7 +27,7 @@ namespace Assets.Scripts.SaveSystem.Data
         public void LoadData(BinaryFormatter formatter, FileStream stream)
         {
             var data = (HomeData)formatter.Deserialize(stream);
-            var building = GameObject.Find("Home").GetComponent<Home>();
+            var building = Home.instance;
             building.Level = data.level;
         }
 
@@ -38,12 +38,12 @@ namespace Assets.Scripts.SaveSystem.Data
 
         internal static void quickLoadHomeLevel()
         {
-            GameObject.Find("Home").GetComponent<Home>().Level = StaticClass.HomeLevel;
+            Home.instance.Level = StaticClass.HomeLevel != 0 ? StaticClass.HomeLevel : 1;
         }
 
         internal static void quickSaveHomeLevel()
         {
-            StaticClass.HomeLevel = GameObject.Find("Home").GetComponent<Home>().Level;
+            StaticClass.HomeLevel = Home.instance.Level;
         }
     }
 }

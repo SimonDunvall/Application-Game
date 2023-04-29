@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using Resources = Assets.Scripts.Resources;
 using System.Collections.Generic;
+using Random = System.Random;
 
 public class MapUiManager : MonoBehaviour
 {
@@ -13,14 +14,29 @@ public class MapUiManager : MonoBehaviour
     public GameObject timer;
     public GameObject levelUp;
     public GameObject changeResourceType;
+
+    public GameObject woodTrade;
+    public GameObject stoneTrade;
+    public GameObject metalTrade;
+
     public Animator animatorStorage;
     public Animator animatorTimer;
     public Animator animatorLevelUp;
     public Animator animatorChangeResourceType;
+
+    public Animator animatorWoodTrade;
+    public Animator animatorStoneTrade;
+    public Animator animatorMetalTrade;
+
     public TMP_Text innerStorageText;
     public TMP_Text timerText;
     public TMP_Text levelUpText;
     public TMP_Text changeResourceTypeText;
+
+    public TMP_Text woodTradeText;
+    public TMP_Text stoneTradeText;
+    public TMP_Text metalTradeText;
+
     private static int BuildingId;
 
     public static MapUiManager instance { get; private set; }
@@ -40,6 +56,7 @@ public class MapUiManager : MonoBehaviour
     public void OpenInspector(IBuilding building, bool isResourceBuilding = false, string storageAmount = "", int timeLeft = 0, string resourceTypeText = "", bool showChangeResourceType = false)
     {
         BuildingId = building.GetInstanceID();
+        CloseInspector();
         levelUp.SetActive(true);
         UpdateLevelText(building);
         animatorLevelUp.SetTrigger("pop up");
@@ -62,12 +79,18 @@ public class MapUiManager : MonoBehaviour
         }
         else
         {
-            storage.SetActive(false);
-            timer.SetActive(false);
-            changeResourceType.SetActive(false);
+            woodTrade.SetActive(true);
+            stoneTrade.SetActive(true);
+            metalTrade.SetActive(true);
+            var tradeInfo = Home.instance.GetTradeConverstion();
+            UpdateTradeText("wood", tradeInfo);
+            UpdateTradeText("stone", tradeInfo);
+            UpdateTradeText("metal", tradeInfo);
+            animatorWoodTrade.SetTrigger("pop up");
+            animatorStoneTrade.SetTrigger("pop up");
+            animatorMetalTrade.SetTrigger("pop up");
         }
     }
-
 
     public void CloseInspector()
     {
@@ -75,6 +98,36 @@ public class MapUiManager : MonoBehaviour
         timer.SetActive(false);
         levelUp.SetActive(false);
         changeResourceType.SetActive(false);
+
+        woodTrade.SetActive(false);
+        stoneTrade.SetActive(false);
+        metalTrade.SetActive(false);
+    }
+
+    public void UpdateTradeText(string resource, Dictionary<string, (int, int)> tradeInfo)
+    {
+        if (woodTrade.activeSelf && stoneTrade.activeSelf && metalTrade.activeSelf)
+        {
+            var amount = tradeInfo[resource].Item2;
+            var tradeText = $"{tradeInfo[resource].Item1 * amount} gold \n for \n {amount} {resource}";
+            var tradeObject = Resources.CanPay(new Dictionary<string, int>() { { resource, amount } });
+
+            switch (resource)
+            {
+                case "wood":
+                    woodTradeText.text = tradeText;
+                    woodTrade.GetComponent<Button>().interactable = tradeObject;
+                    break;
+                case "stone":
+                    stoneTradeText.text = tradeText;
+                    stoneTrade.GetComponent<Button>().interactable = tradeObject;
+                    break;
+                case "metal":
+                    metalTradeText.text = tradeText;
+                    metalTrade.GetComponent<Button>().interactable = tradeObject;
+                    break;
+            }
+        }
     }
 
     public void UpdateResourceText(string storageText, string type, int instaceId)
@@ -130,6 +183,12 @@ public class MapUiManager : MonoBehaviour
             if (building.GetInstanceID() == BuildingId && building.Level < building.GetMaxLevel())
             {
                 building.LevelUp();
+                UpdateLevelText(building);
+
+                var tradeInfo = Home.instance.GetTradeConverstion();
+                UpdateTradeText("wood", tradeInfo);
+                UpdateTradeText("stone", tradeInfo);
+                UpdateTradeText("metal", tradeInfo);
                 break;
             }
         }
@@ -155,7 +214,6 @@ public class MapUiManager : MonoBehaviour
             {
                 result = "Free";
             }
-
 
             levelUpText.text = building.IsMaxLevel() ? $"Max Level \n Level {building.Level}" : $"Upgrade Cost: {result} \n Level {building.Level}";
 

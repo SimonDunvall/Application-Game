@@ -103,6 +103,9 @@ MonoBehaviour:
   UpgradeWoodCost: 300
   UpgradeStoneCost: 200
   UpgradeMetalCost: 175
+  GoldPerWood: 10
+  GoldPerStone: 6
+  GoldPerMetal: 4
   LevelModifier: 1.2
 --- !u!61 &-6896791686636574219
 BoxCollider2D:

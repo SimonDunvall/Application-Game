@@ -129,6 +129,7 @@ namespace Assets.Scripts.Buildings
             if (neighbouringTiles.Count == 9 && neighbouringTiles.All(tile => !tile.isOccupied))
             {
                 Resources.Pay(GetCost());
+                Resources.UpdateResources();
 
                 CreateObject(this, nearestTile.transform.position);
 
@@ -147,8 +148,15 @@ namespace Assets.Scripts.Buildings
         {
             if (Level < MaxLevel)
             {
+                Resources.Pay(GetUpgradeCost());
+                Resources.UpdateResources();
                 Level += 1;
-                MapUiManager.instance.UpdateLevelText(this);
+                var resourceTypeText = ResourceType;
+                if (UnlockedMetal())
+                {
+
+                    MapUiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), resourceTypeText, InstaceId);
+                }
             }
         }
 
