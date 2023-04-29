@@ -72,7 +72,7 @@ namespace Assets.Scripts.Buildings
 
         public static Home CreateObject(Home preFab, Vector3 posistion)
         {
-            return Instantiate(preFab, posistion, Quaternion.identity);
+            throw new System.NotImplementedException();
         }
 
         public Sprite GetSprite()
