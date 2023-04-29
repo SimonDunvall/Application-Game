@@ -37,7 +37,7 @@ namespace Assets.Scripts.Buildings
         public float LevelModifier;
         public List<string> InnerStorage { get; set; } = new List<string>();
         public float TimeLeft { get; set; }
-        private float nextIncreaseTime = 10f;
+        private float nextIncreaseTime = 60f;
         public string ResourceType => "Wood";
 
         private void Awake()
@@ -73,7 +73,7 @@ namespace Assets.Scripts.Buildings
         {
             if (TimeLeft <= 0 && InnerStorage.Count() < InnerStorageSize)
             {
-                nextIncreaseTime = Time.time + 10f;
+                nextIncreaseTime = Time.time + 60f;
 
                 InnerStorage.AddRange(Enumerable.Repeat(ResourceType, ResourcePerMinute).Concat(Enumerable.Repeat(ResourceType, (int)(Level * LevelModifier))));
 
@@ -94,7 +94,7 @@ namespace Assets.Scripts.Buildings
                 SaveSystemManager.resources.wood += InnerStorage.Count();
                 if (InnerStorage.Count() >= InnerStorageSize)
                 {
-                    nextIncreaseTime = Time.time + 10f;
+                    nextIncreaseTime = Time.time + 60f;
                 }
                 InnerStorage.Clear();
                 MapUiManager.instance.UpdateResourceText(InnerStorage.Count().ToString(), ResourceType, InstaceId);

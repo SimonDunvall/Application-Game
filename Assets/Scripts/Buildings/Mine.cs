@@ -38,7 +38,7 @@ namespace Assets.Scripts.Buildings
         public int LevelToUnlockSecondResourceType;
         public List<string> InnerStorage { get; set; } = new List<string>();
         public float TimeLeft { get; set; }
-        private float nextIncreaseTime = 10f;
+        private float nextIncreaseTime = 60f;
         public string ResourceType => "Stone";
         public string SecondResourceType => "Metal";
         private string _choosenResourceType = "Stone";
@@ -77,7 +77,7 @@ namespace Assets.Scripts.Buildings
         {
             if (TimeLeft <= 0 && InnerStorage.Count() < InnerStorageSize)
             {
-                nextIncreaseTime = Time.time + 10f;
+                nextIncreaseTime = Time.time + 60f;
                 InnerStorage.AddRange(Enumerable.Repeat(ChoosenResourceType, ResourcePerMinute).Concat(Enumerable.Repeat(ResourceType, (int)(Level * LevelModifier))));
             }
             if (InnerStorage.Count() > InnerStorageSize)
@@ -102,7 +102,7 @@ namespace Assets.Scripts.Buildings
                 SaveSystemManager.resources.metal += InnerStorage.Where(r => r == SecondResourceType).Count();
                 if (InnerStorage.Count() >= InnerStorageSize)
                 {
-                    nextIncreaseTime = Time.time + 10f;
+                    nextIncreaseTime = Time.time + 60f;
                 }
                 InnerStorage.Clear();
                 var resourceTypeText = ResourceType;
