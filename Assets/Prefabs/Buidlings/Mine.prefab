@@ -103,10 +103,10 @@ MonoBehaviour:
   BaseWoodCost: 100
   BaseStoneCost: 0
   BaseMetalCost: 0
-  UpgradeGoldCost: 0
-  UpgradeWoodCost: 0
-  UpgradeStoneCost: 0
-  UpgradeMetalCost: 0
+  UpgradeGoldCost: 400
+  UpgradeWoodCost: 60
+  UpgradeStoneCost: 49
+  UpgradeMetalCost: 23
   ResourcePerMinute: 1
   InnerStorageSize: 7
   LevelModifier: 2.2

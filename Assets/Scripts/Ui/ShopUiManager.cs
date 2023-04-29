@@ -1,13 +1,10 @@
 using Assets.Scripts.Buildings;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Resources = Assets.Scripts.Resources;
 
 public class ShopUiManager : MonoBehaviour
 {
-    public Button TestBuildingButton;
-    public TestBuilding TestBuilding;
     public Button MineButton;
     public Mine Mine;
     public Button TreeFarmButton;
@@ -29,10 +26,6 @@ public class ShopUiManager : MonoBehaviour
 
     private void Start()
     {
-        if (!Resources.CanPay(TestBuilding.GetCost()))
-        {
-            TestBuildingButton.interactable = false;
-        }
         if (!Resources.CanPay(Mine.GetCost()))
         {
             MineButton.interactable = false;

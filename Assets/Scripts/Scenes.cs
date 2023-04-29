@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Linq;
 using Assets.Scripts.SaveSystem;
+using Assets.Scripts.SaveSystem.Data;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,14 +16,8 @@ namespace Assets.Scripts
 
         public void LoadShop()
         {
-            foreach (var tile in SaveSystemManager.tiles)
-            {
-                Vector3 position = tile.transform.position;
-                if (!StaticClass.TilesToSave.Contains(position))
-                {
-                    StaticClass.TilesToSave.Add(position);
-                }
-            };
+            TileData.quickSaveTiles();
+            HomeData.quickSaveHomeLevel();
 
             BuildingsSetActive(false);
             StartCoroutine(LoadSceneAsync(1));
@@ -33,7 +27,6 @@ namespace Assets.Scripts
         {
             SaveSystemManager.mine.ForEach(m => m.gameObject.SetActive(isActive));
             SaveSystemManager.treeFarms.ForEach(m => m.gameObject.SetActive(isActive));
-            SaveSystemManager.testBuildings.ForEach(m => m.gameObject.SetActive(isActive));
         }
 
         IEnumerator LoadSceneAsync(int sceneIndex)

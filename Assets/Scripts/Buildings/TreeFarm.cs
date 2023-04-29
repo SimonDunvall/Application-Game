@@ -109,7 +109,7 @@ namespace Assets.Scripts.Buildings
 
         public void PlaceBuilding()
         {
-            Tile nearestTile = Tile.GetNearestTile();
+            Tile nearestTile = Tile.GetNearestTile(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
             List<Tile> neighbouringTiles = nearestTile.FindAllTileNeighbors();
             neighbouringTiles.Add(nearestTile);

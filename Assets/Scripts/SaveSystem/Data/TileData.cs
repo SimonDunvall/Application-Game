@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using Assets.Scripts.Map;
 using UnityEngine;
@@ -40,6 +41,31 @@ namespace Assets.Scripts.SaveSystem.Data
             tile.isOccupied = true;
 
             SaveSystemManager.tiles.Add(tile);
+        }
+
+        internal static void quickLoadTiles()
+        {
+            if (StaticClass.TilesToSave.Count() > 0)
+            {
+                foreach (var pos in StaticClass.TilesToSave)
+                {
+                    var tile = Tile.FindTile(pos);
+                    tile.isOccupied = true;
+                    SaveSystemManager.tiles.Add(tile);
+                }
+            }
+        }
+
+        internal static void quickSaveTiles()
+        {
+            foreach (var tile in SaveSystemManager.tiles)
+            {
+                Vector3 position = tile.transform.position;
+                if (!StaticClass.TilesToSave.Contains(position))
+                {
+                    StaticClass.TilesToSave.Add(position);
+                }
+            };
         }
     }
 }

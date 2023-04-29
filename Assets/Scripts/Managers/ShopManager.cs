@@ -8,7 +8,7 @@ namespace Assets.Scripts.Managers
     {
         public CustomCursor customCursor;
 
-        public void BuyTestBuilding(TestBuilding building)
+        public void BuyTestBuilding(Home building)
         {
             BuyBuilding(building);
         }

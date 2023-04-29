@@ -5,22 +5,23 @@ using Assets.Scripts.Map;
 using System.Linq;
 using Assets.Scripts.SaveSystem.Data;
 using UnityEngine.SceneManagement;
+using System;
 
 namespace Assets.Scripts.SaveSystem
 {
     public class SaveSystemManager : MonoBehaviour
     {
-        [SerializeField] public TestBuilding testBuildingPrefab;
+        [SerializeField] public Home homePrefab;
         [SerializeField] public TreeFarm treeFarmPrefab;
         [SerializeField] public Mine minePrefab;
 
-        public static List<TestBuilding> testBuildings = new List<TestBuilding>();
+        public static List<Home> home = new List<Home>();
         public static List<TreeFarm> treeFarms = new List<TreeFarm>();
         public static List<Mine> mine = new List<Mine>();
         public static List<Tile> tiles = new List<Tile>();
         public static Resources resources = new Resources()
         {
-            gold = 0,
+            gold = 500,
             wood = 0,
             stone = 0,
             metal = 0
@@ -48,16 +49,8 @@ namespace Assets.Scripts.SaveSystem
 
         private void Start()
         {
-            //Loads tiles from before the scene switched
-            if (StaticClass.TilesToSave.Count() > 0)
-            {
-                foreach (var pos in StaticClass.TilesToSave)
-                {
-                    var tile = Tile.FindTile(pos);
-                    tile.isOccupied = true;
-                    tiles.Add(tile);
-                }
-            }
+            TileData.quickLoadTiles();
+            HomeData.quickLoadHomeLevel();
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -76,7 +69,7 @@ namespace Assets.Scripts.SaveSystem
 
         public void LoadGame()
         {
-            dataHandler.Load(new TestBuildingData());
+            dataHandler.Load(new HomeData());
             dataHandler.Load(new TreeFarmData());
             dataHandler.Load(new MineData());
             dataHandler.Load(new TileData());
@@ -86,7 +79,7 @@ namespace Assets.Scripts.SaveSystem
 
         public void SaveGame()
         {
-            dataHandler.Save((new TestBuildingData()), testBuildings.Count());
+            dataHandler.Save((new HomeData()), home.Count());
             dataHandler.Save((new TreeFarmData()), treeFarms.Count());
             dataHandler.Save((new MineData()), mine.Count());
             dataHandler.Save((new TileData()), tiles.Count());

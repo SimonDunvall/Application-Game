@@ -87,14 +87,11 @@ public class MapUiManager : MonoBehaviour
 
     public void CollectResource()
     {
-        // Create dictionaries that map GetInstanceID() values to building objects
         var treeFarmDict = SaveSystemManager.treeFarms.ToDictionary(b => b.GetInstanceID(), b => b);
         var mineDict = SaveSystemManager.mine.ToDictionary(b => b.GetInstanceID(), b => b);
 
-        // Iterate over the GetInstanceID() values for a given BuildingId
         foreach (var instanceId in treeFarmDict.Keys.Concat(mineDict.Keys).Distinct().Where(id => id == BuildingId))
         {
-            // Look up the corresponding building object and call its CollectStorage() method
             if (treeFarmDict.TryGetValue(instanceId, out var treeFarm))
                 treeFarm.CollectStorage();
             if (mineDict.TryGetValue(instanceId, out var mine))

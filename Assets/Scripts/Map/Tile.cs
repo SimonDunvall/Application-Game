@@ -27,32 +27,38 @@ namespace Assets.Scripts.Map
             return GameManager.instance.tiles.FirstOrDefault(t => t.transform.position == posistion);
         }
 
-        internal List<Tile> FindAllTileNeighbors()
+        internal List<Tile> FindAllTileNeighbors(bool useLarge = false)
         {
             List<Tile> neighbouringTiles = new List<Tile>();
-            foreach (Vector2 neighbourPosition in neighbourPositions)
+
+            foreach (Vector2 neighbourPosition in useLarge ? largeNeighbourPositions : neighbourPositions)
             {
                 Vector3 position = (Vector2)this.transform.position + neighbourPosition;
-                neighbouringTiles.AddRange(GameManager.instance.tiles.Where(tile => tile.transform.position == position));
+                Tile neighbour = GameManager.instance.tiles.FirstOrDefault(tile => tile.transform.position == position);
+                if (neighbour != null)
+                {
+                    neighbouringTiles.Add(neighbour);
+                }
             }
+
             return neighbouringTiles;
         }
 
-        internal void SetCloseTilesOccupied()
+        internal void SetCloseTilesOccupied(bool useLarge = false)
         {
-            var tiles = this.FindAllTileNeighbors();
+            var tiles = this.FindAllTileNeighbors(useLarge);
             tiles.Add(this);
             tiles.ForEach(tile => tile.isOccupied = true);
             SaveSystemManager.tiles.AddRange(tiles);
         }
 
-        internal static Tile GetNearestTile()
+        internal static Tile GetNearestTile(Vector3 postition)
         {
             Tile nearestTile = null;
             float shortestDistance = float.MaxValue;
             foreach (var tile in GameManager.instance.tiles)
             {
-                float dist = Vector2.Distance(tile.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                float dist = Vector2.Distance(tile.transform.position, postition);
                 if (dist < shortestDistance)
                 {
                     shortestDistance = dist;
@@ -72,6 +78,34 @@ namespace Assets.Scripts.Map
             Vector2.up + Vector2.left,
             Vector2.down + Vector2.right,
             Vector2.down + Vector2.left
+        };
+
+        private static readonly Vector2[] largeNeighbourPositions =
+        {
+            Vector2.up,
+            Vector2.right,
+            Vector2.down,
+            Vector2.left,
+            Vector2.up + Vector2.right,
+            Vector2.up + Vector2.left,
+            Vector2.down + Vector2.right,
+            Vector2.down + Vector2.left,
+            Vector2.up + Vector2.right + Vector2.up,
+            Vector2.up + Vector2.left + Vector2.up,
+            Vector2.down + Vector2.right + Vector2.down,
+            Vector2.down + Vector2.left + Vector2.down,
+            Vector2.up + Vector2.right + Vector2.right,
+            Vector2.up + Vector2.left + Vector2.left,
+            Vector2.down + Vector2.right + Vector2.right,
+            Vector2.down + Vector2.left + Vector2.left,
+            Vector2.up + Vector2.up,
+            Vector2.right + Vector2.right,
+            Vector2.down + Vector2.down,
+            Vector2.left + Vector2.left,
+            Vector2.up + Vector2.up + Vector2.right + Vector2.right,
+            Vector2.up + Vector2.up + Vector2.left + Vector2.left,
+            Vector2.down + Vector2.down + Vector2.right + Vector2.right,
+            Vector2.down + Vector2.down + Vector2.left + Vector2.left
         };
     }
 }

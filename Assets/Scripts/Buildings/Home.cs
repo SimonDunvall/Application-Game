@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Managers;
 using Assets.Scripts.Map;
 using Assets.Scripts.SaveSystem;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Buildings
 {
-    public class TestBuilding : MonoBehaviour, IBuilding
+    public class Home : MonoBehaviour, IBuilding
     {
         public int InstaceId => GetInstanceID();
         public string Type => "testBuilding";
@@ -24,47 +24,56 @@ namespace Assets.Scripts.Buildings
             }
         }
         public int MaxLevel;
-        public int BaseGoldCost;
-        public int BaseWoodCost;
-        public int BaseStoneCost;
-        public int BaseMetalCost;
         public int UpgradeGoldCost;
         public int UpgradeWoodCost;
         public int UpgradeStoneCost;
         public int UpgradeMetalCost;
         public float LevelModifier;
 
+        static bool hasLoadedSave = false;
+
+        public static Home instance { get; private set; }
+
         private void Awake()
         {
-            SaveSystemManager.testBuildings.Add(this);
-        }
-
-        private void Start()
-        {
-            DontDestroyOnLoad(gameObject);
-        }
-
-        public void PlaceBuilding()
-        {
-            var customCursor = StaticClass.GetCustomCursor();
-            var tiles = GameManager.instance.tiles;
-            Tile nearestTile = Tile.GetNearestTile();
-
-            List<Tile> neighbouringTiles = nearestTile.FindAllTileNeighbors();
-            neighbouringTiles.Add(nearestTile);
-            if (neighbouringTiles.Count == 9 && neighbouringTiles.All(tile => !tile.isOccupied))
+            if (instance != null && instance != this)
             {
-                Resources.Pay(GetCost());
+                Destroy(this);
+            }
+            else
+            {
+                instance = this;
+            }
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
 
-                CreateObject(this, nearestTile.transform.position);
-                nearestTile.SetCloseTilesOccupied();
-
-                customCursor.DisableCursor();
-                GameManager.instance.ResetValues();
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (!hasLoadedSave)
+            {
+                hasLoadedSave = true;
+                SetTilesToOccupied();
+                SaveSystemManager.home.Add(this);
             }
         }
 
-        public static TestBuilding CreateObject(TestBuilding preFab, Vector3 posistion)
+        private void SetTilesToOccupied()
+        {
+            Tile nearestTile = Tile.GetNearestTile(new Vector3((float)-0.5, (float)-0.5, 0));
+
+            if (!nearestTile.isOccupied)
+            {
+                List<Tile> neighbouringTiles = nearestTile.FindAllTileNeighbors(true);
+                neighbouringTiles.Add(nearestTile);
+
+                if (neighbouringTiles.Count() == 25 && neighbouringTiles.All(tile => !tile.isOccupied))
+                {
+                    nearestTile.SetCloseTilesOccupied(true);
+                }
+            }
+        }
+
+        public static Home CreateObject(Home preFab, Vector3 posistion)
         {
             return Instantiate(preFab, posistion, Quaternion.identity);
         }
@@ -100,17 +109,6 @@ namespace Assets.Scripts.Buildings
             }
         }
 
-        public Dictionary<string, int> GetCost()
-        {
-            Dictionary<string, int> BuyingCost = new Dictionary<string, int>();
-            BuyingCost.Add("gold", BaseGoldCost);
-            BuyingCost.Add("wood", BaseWoodCost);
-            BuyingCost.Add("stone", BaseStoneCost);
-            BuyingCost.Add("metal", BaseMetalCost);
-
-            return BuyingCost;
-        }
-
         public Dictionary<string, int> GetUpgradeCost()
         {
             Dictionary<string, int> BuyingCost = new Dictionary<string, int>();
@@ -122,6 +120,11 @@ namespace Assets.Scripts.Buildings
                 BuyingCost.Add("metal", (int)(UpgradeMetalCost + (Level * LevelModifier * 1.5)));
 
             return BuyingCost;
+        }
+
+        public void PlaceBuilding()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
